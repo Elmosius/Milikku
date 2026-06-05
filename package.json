@@ -35,6 +35,7 @@
     "pinia": "^3.0.4",
     "postgres": "^3.4.9",
     "radix-vue": "^1.9.17",
+    "reka-ui": "^2.9.9",
     "shadcn-nuxt": "^2.7.4",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.0",

@@ -1,0 +1,121 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Fonts */
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+
+  /* Theme Colors mapped to CSS variables */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* Border Radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+:root {
+  /* Milikku Color Palette */
+  /* White: #FDFFFC -> hsl(100 60% 99.4%) */
+  --background: 100 60% 99.4%;
+  /* Black: #0D1821 -> hsl(207 43.5% 9%) */
+  --foreground: 207 43.5% 9%;
+
+  --card: 100 60% 99.4%;
+  --card-foreground: 207 43.5% 9%;
+
+  --popover: 100 60% 99.4%;
+  --popover-foreground: 207 43.5% 9%;
+
+  /* Primary: #EF6351 -> hsl(7 83.3% 62.7%) */
+  --primary: 7 83.3% 62.7%;
+  --primary-foreground: 100 60% 99.4%;
+
+  /* Secondary: #F38375 -> hsl(6.7 82.9% 70.6%) */
+  --secondary: 6.7 82.9% 70.6%;
+  --secondary-foreground: 207 43.5% 9%;
+
+  /* Accent: #F5B82E -> hsl(41.6 91.7% 57.1%) */
+  --accent: 41.6 91.7% 57.1%;
+  --accent-foreground: 207 43.5% 9%;
+
+  --muted: 210 20% 96%;
+  --muted-foreground: 207 20% 45%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 207 20% 90%;
+  --input: 207 20% 90%;
+  --ring: 7 83.3% 62.7%;
+
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* Black: #0D1821 -> hsl(207 43.5% 9%) */
+  --background: 207 43.5% 9%;
+  /* White: #FDFFFC -> hsl(100 60% 99.4%) */
+  --foreground: 100 60% 99.4%;
+
+  /* Slightly lighter dark background for card/popover */
+  --card: 207 43.5% 12%;
+  --card-foreground: 100 60% 99.4%;
+
+  --popover: 207 43.5% 11%;
+  --popover-foreground: 100 60% 99.4%;
+
+  --primary: 7 83.3% 62.7%;
+  --primary-foreground: 100 60% 99.4%;
+
+  --secondary: 6.7 82.9% 70.6%;
+  --secondary-foreground: 207 43.5% 9%;
+
+  --accent: 41.6 91.7% 57.1%;
+  --accent-foreground: 207 43.5% 9%;
+
+  --muted: 207 30% 18%;
+  --muted-foreground: 207 15% 65%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 207 30% 18%;
+  --input: 207 30% 18%;
+  --ring: 7 83.3% 62.7%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}

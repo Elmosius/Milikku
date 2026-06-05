@@ -23,7 +23,7 @@ export default defineNuxtConfig({
     prefix: '',
     componentDir: './app/components/ui',
   },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', 'vue-sonner/style.css'],
   vite: {
     plugins: [tailwindcss()],
   },

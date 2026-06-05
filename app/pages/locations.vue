@@ -1,0 +1,12 @@
+<template>
+  <div class="flex flex-1 flex-col gap-4">
+    <div class="flex items-center justify-between">
+      <h1 class="text-foreground text-2xl font-bold tracking-tight">Locations</h1>
+    </div>
+    <div class="bg-card flex flex-1 items-center justify-center rounded-xl border p-6">
+      <p class="text-muted-foreground text-center text-sm">
+        Halaman manajemen lokasi akan tampil di sini
+      </p>
+    </div>
+  </div>
+</template>

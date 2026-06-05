@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { Loader2 } from 'lucide-vue-next';
 import { Toaster } from '@/components/ui/sonner';
 import { useAuth } from '@/composables/useAuth';
+import { Loader2 } from 'lucide-vue-next';
 
 const { isLoading } = useAuth();
 </script>
 
 <template>
   <div>
-    <!-- Global Auth Loading state with premium design -->
     <div
       v-if="isLoading"
       class="bg-background relative flex min-h-svh flex-col items-center justify-center overflow-hidden p-4"
@@ -29,11 +28,12 @@ const { isLoading } = useAuth();
       </div>
     </div>
 
-    <!-- Main Application -->
     <template v-else>
-      <NuxtRouteAnnouncer />
-      <NuxtPage />
       <Toaster position="top-right" rich-colors />
+      <NuxtRouteAnnouncer />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
     </template>
   </div>
 </template>

@@ -12,6 +12,13 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxtjs/supabase',
   ],
+  supabase: {
+    redirectOptions: {
+      login: '/auth/login',
+      callback: '/auth/confirm',
+      exclude: [],
+    },
+  },
   shadcn: {
     prefix: '',
     componentDir: './app/components/ui',

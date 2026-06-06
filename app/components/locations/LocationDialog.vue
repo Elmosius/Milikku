@@ -63,8 +63,16 @@ watch(() => [props.open, props.location], ([isOpen]) => {
 
 const onSubmit = handleSubmit(async (values: LocationSchema) => {
   try {
-    // Simulate delay
-    await new Promise(r => setTimeout(r, 500))
+    const url = props.mode === 'edit' && props.location 
+      ? `/api/locations/${props.location.id}` 
+      : '/api/locations'
+      
+    const method = props.mode === 'edit' ? 'PUT' : 'POST'
+
+    await $fetch(url, {
+      method,
+      body: values,
+    })
 
     toast.success(props.mode === 'edit' ? 'Location updated successfully' : 'Location created successfully')
     

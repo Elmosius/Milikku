@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Folder, Pencil, Trash2 } from 'lucide-vue-next'
-import type { Category } from '~/types/category'
-import { iconMap } from '~/constants/icons'
+import type { Location } from '~/types/location'
+import { locationIconMap as iconMap } from '~/constants/locationIcons'
 import { Button } from '~/components/ui/button'
 import { Skeleton } from '~/components/ui/skeleton'
 import {
@@ -14,13 +14,13 @@ import {
 } from '~/components/ui/table'
 
 defineProps<{
-  categories: Category[]
+  locations: Location[]
   pending: boolean
 }>()
 
 defineEmits<{
-  (e: 'edit', category: Category): void
-  (e: 'delete', category: Category): void
+  (e: 'edit', location: Location): void
+  (e: 'delete', location: Location): void
 }>()
 </script>
 
@@ -31,7 +31,7 @@ defineEmits<{
         <TableRow>
           <TableHead class="w-20">Icon</TableHead>
           <TableHead>Name</TableHead>
-          <TableHead>Color</TableHead>
+          <TableHead>Description</TableHead>
           <TableHead>Created At</TableHead>
           <TableHead class="text-right">Actions</TableHead>
         </TableRow>
@@ -42,54 +42,49 @@ defineEmits<{
           <TableRow v-for="i in 3" :key="i">
             <TableCell><Skeleton class="h-8 w-8 rounded-full" /></TableCell>
             <TableCell><Skeleton class="h-5 w-37.5" /></TableCell>
-            <TableCell><Skeleton class="h-6 w-6 rounded-full" /></TableCell>
+            <TableCell><Skeleton class="h-5 w-48" /></TableCell>
             <TableCell><Skeleton class="h-5 w-25" /></TableCell>
             <TableCell class="text-right"><Skeleton class="inline-block h-8 w-25" /></TableCell>
           </TableRow>
         </template>
 
         <!-- Empty State -->
-        <template v-else-if="!categories || categories.length === 0">
+        <template v-else-if="!locations || locations.length === 0">
           <TableRow>
             <TableCell colspan="5" class="text-muted-foreground h-32 text-center">
-              No categories found. Click "Add Category" to create one.
+              No locations found. Click "Add Location" to create one.
             </TableCell>
           </TableRow>
         </template>
 
         <!-- Data Rows -->
         <template v-else>
-          <TableRow v-for="category in categories" :key="category.id">
+          <TableRow v-for="location in locations" :key="location.id">
             <TableCell>
               <component
-                :is="iconMap[category.icon || 'Folder']"
-                v-if="iconMap[category.icon || 'Folder']"
+                :is="iconMap[location.icon || 'Folder']"
+                v-if="iconMap[location.icon || 'Folder']"
                 class="text-muted-foreground h-6 w-6"
                 stroke-width="1.5"
               />
               <Folder v-else class="text-muted-foreground h-6 w-6" stroke-width="1.5" />
             </TableCell>
-            <TableCell class="font-medium">{{ category.name }}</TableCell>
-            <TableCell>
-              <div
-                v-if="category.color"
-                class="h-6 w-6 rounded-full border"
-                :style="{ backgroundColor: category.color }"
-              ></div>
-              <span v-else class="text-muted-foreground">-</span>
+            <TableCell class="font-medium">{{ location.name }}</TableCell>
+            <TableCell class="truncate max-w-xs" :title="location.description || ''">
+              {{ location.description || '-' }}
             </TableCell>
             <TableCell>{{
-              category.createdAt ? new Date(category.createdAt).toLocaleDateString() : '-'
+              location.createdAt ? new Date(location.createdAt).toLocaleDateString() : '-'
             }}</TableCell>
             <TableCell class="text-right">
-              <Button variant="ghost" size="icon" @click="$emit('edit', category)">
+              <Button variant="ghost" size="icon" @click="$emit('edit', location)">
                 <Pencil class="h-4 w-4" stroke-width="1.5" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 class="text-destructive hover:bg-destructive/10"
-                @click="$emit('delete', category)"
+                @click="$emit('delete', location)"
               >
                 <Trash2 class="h-4 w-4" stroke-width="1.5" />
               </Button>

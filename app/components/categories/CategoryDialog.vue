@@ -22,36 +22,11 @@ import {
 } from '~/components/ui/form'
 import { Input } from '~/components/ui/input'
 import { Button } from '~/components/ui/button'
-import { 
-  Home, Briefcase, ShoppingBag, Gamepad2, Laptop, Smartphone, 
-  Book, Car, Plane, Coffee, Shirt, Camera, Folder, Heart, Star, Music, Video, MapPin, Gift
-} from 'lucide-vue-next'
-
-const availableIcons = [
-  { name: 'Folder', component: Folder },
-  { name: 'Home', component: Home },
-  { name: 'Briefcase', component: Briefcase },
-  { name: 'ShoppingBag', component: ShoppingBag },
-  { name: 'Gamepad2', component: Gamepad2 },
-  { name: 'Laptop', component: Laptop },
-  { name: 'Smartphone', component: Smartphone },
-  { name: 'Book', component: Book },
-  { name: 'Car', component: Car },
-  { name: 'Plane', component: Plane },
-  { name: 'Coffee', component: Coffee },
-  { name: 'Shirt', component: Shirt },
-  { name: 'Camera', component: Camera },
-  { name: 'Heart', component: Heart },
-  { name: 'Star', component: Star },
-  { name: 'Music', component: Music },
-  { name: 'Video', component: Video },
-  { name: 'MapPin', component: MapPin },
-  { name: 'Gift', component: Gift },
-]
+import { availableIcons } from '~/constants/categoryIcons'
 const props = defineProps<{
   open: boolean
   mode: 'create' | 'edit'
-  category?: { id: number; name: string; icon?: string | null; color?: string | null } | null
+  category?: { id: string; name: string; icon?: string | null; color?: string | null } | null
 }>()
 
 const emit = defineEmits<{
@@ -109,12 +84,7 @@ const onSubmit = handleSubmit(async (values: CategorySchema) => {
     }, 150)
     
   } catch (error: any) {
-    console.error("Form Submission Error:", error)
     toast.error(error.message || 'An error occurred')
-    // Attempt to close modal even on error if it was a success but toast failed
-    if (error.message && !error.message.includes('fetch')) {
-      emit('update:open', false)
-    }
   }
 })
 </script>

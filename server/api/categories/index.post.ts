@@ -1,19 +1,9 @@
-import { serverSupabaseUser } from '#supabase/server';
 import { db } from '../../utils/db';
 import { categories, profiles } from '../../database/schema';
 import { eq } from 'drizzle-orm';
 
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event);
-  
-  const userId = (user as any)?.id || user?.sub;
-  
-  if (!user || !userId) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    });
-  }
+  const { userId, user } = await getAuthenticatedUser(event);
 
   const body = await readBody(event);
   

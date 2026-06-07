@@ -1,5 +1,7 @@
 import { toast } from 'vue-sonner';
 import type { Item } from '~/types/item';
+import type { Category } from '~/types/category';
+import type { Location } from '~/types/location';
 import type { ItemFormValues } from '~/validations/item';
 
 export function useItems() {
@@ -118,14 +120,14 @@ export function useItems() {
   const { categories } = useCategories();
   const { locations } = useLocations();
 
-  const getCategoryName = (id: string | null | undefined): string => {
-    if (!id) return '-';
-    return categories.value?.find((c) => c.id === id)?.name || '-';
+  const getCategory = (id: string | null | undefined): Category | undefined => {
+    if (!id) return undefined;
+    return categories.value?.find((c) => c.id === id);
   };
 
-  const getLocationName = (id: string | null | undefined): string => {
-    if (!id) return '-';
-    return locations.value?.find((l) => l.id === id)?.name || '-';
+  const getLocation = (id: string | null | undefined): Location | undefined => {
+    if (!id) return undefined;
+    return locations.value?.find((l) => l.id === id);
   };
 
   return {
@@ -157,7 +159,7 @@ export function useItems() {
     handleDelete,
 
     // Lookup helpers
-    getCategoryName,
-    getLocationName,
+    getCategory,
+    getLocation,
   };
 }

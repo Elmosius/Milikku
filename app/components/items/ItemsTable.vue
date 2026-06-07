@@ -10,15 +10,20 @@ import {
 import { Skeleton } from '~/components/ui/skeleton';
 import { Button } from '~/components/ui/button';
 import { Badge } from '~/components/ui/badge';
-import { Eye, Edit, Trash2 } from 'lucide-vue-next';
+import { Eye, Edit, Trash2, Folder } from 'lucide-vue-next';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
 import type { Item } from '~/types/item';
+import type { Category } from '~/types/category';
+import type { Location } from '~/types/location';
 import { SKELETON_ROW_COUNT } from '~/constants/item';
+import { iconMap } from '~/constants/icons';
+import { locationIconMap } from '~/constants/locationIcons';
 
 defineProps<{
   items: Item[];
   pending: boolean;
-  getCategoryName: (id: string | null | undefined) => string;
-  getLocationName: (id: string | null | undefined) => string;
+  getCategory: (id: string | null | undefined) => Category | undefined;
+  getLocation: (id: string | null | undefined) => Location | undefined;
 }>();
 
 defineEmits<{
@@ -64,8 +69,45 @@ defineEmits<{
         <template v-else>
           <TableRow v-for="item in items" :key="item.id">
             <TableCell class="font-medium">{{ item.name }}</TableCell>
-            <TableCell>{{ getCategoryName(item.categoryId) }}</TableCell>
-            <TableCell>{{ getLocationName(item.locationId) }}</TableCell>
+            <TableCell>
+              <div v-if="getCategory(item.categoryId)" class="flex items-center space-x-2">
+                <component
+                  :is="iconMap[getCategory(item.categoryId)?.icon || 'Folder'] || Folder"
+                  class="text-muted-foreground h-4 w-4 shrink-0"
+                  stroke-width="1.5"
+                />
+                <div class="flex items-center space-x-1.5">
+                  <span>{{ getCategory(item.categoryId)?.name }}</span>
+                  <div
+                    v-if="getCategory(item.categoryId)?.color"
+                    class="h-2 w-2 rounded-full"
+                    :style="{ backgroundColor: getCategory(item.categoryId)?.color as string }"
+                  ></div>
+                </div>
+              </div>
+              <span v-else>-</span>
+            </TableCell>
+            <TableCell>
+              <div v-if="getLocation(item.locationId)" class="flex items-center space-x-2">
+                <component
+                  :is="locationIconMap[getLocation(item.locationId)?.icon || 'Folder'] || Folder"
+                  class="text-muted-foreground h-4 w-4 shrink-0"
+                  stroke-width="1.5"
+                />
+                <TooltipProvider v-if="getLocation(item.locationId)?.description">
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <span class="cursor-help border-b border-dashed border-muted-foreground/50">{{ getLocation(item.locationId)?.name }}</span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p class="max-w-xs">{{ getLocation(item.locationId)?.description }}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <span v-else>{{ getLocation(item.locationId)?.name }}</span>
+              </div>
+              <span v-else>-</span>
+            </TableCell>
             <TableCell>{{ item.quantity }}</TableCell>
             <TableCell>
               <Badge variant="outline">{{ item.condition || '-' }}</Badge>

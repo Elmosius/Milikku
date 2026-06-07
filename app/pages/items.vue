@@ -25,8 +25,8 @@ const {
   isDeleting,
   confirmDelete,
   handleDelete,
-  getCategoryName,
-  getLocationName,
+  getCategory,
+  getLocation,
 } = useItems();
 </script>
 
@@ -37,8 +37,8 @@ const {
     <ItemsTable
       :items="items"
       :pending="pending"
-      :get-category-name="getCategoryName"
-      :get-location-name="getLocationName"
+      :get-category="getCategory"
+      :get-location="getLocation"
       @view="openDetailSheet"
       @edit="openEditForm"
       @delete="confirmDelete"
@@ -54,8 +54,8 @@ const {
     <ItemDetailSheet
       v-model:open="sheetOpen"
       :item="selectedItemToView"
-      :get-category-name="getCategoryName"
-      :get-location-name="getLocationName"
+      :get-category="getCategory"
+      :get-location="getLocation"
       @edit="editFromSheet"
       @delete="deleteFromSheet"
     />

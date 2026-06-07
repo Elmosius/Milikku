@@ -20,20 +20,24 @@ export default defineEventHandler(async (event) => {
   }
 
   // Read multipart form data
-  const formData = await readFormData(event);
-  const file = formData.get('photo') as File | null;
+  const parts = await readMultipartFormData(event);
+  if (!parts) {
+    throw createError({ statusCode: 400, statusMessage: 'No multipart data found' });
+  }
 
-  if (!file || !(file instanceof File)) {
+  const filePart = parts.find((p) => p.name === 'photo');
+  if (!filePart || !filePart.data || !filePart.filename) {
     throw createError({ statusCode: 400, statusMessage: 'Photo file is required' });
   }
 
   // Validate file type
-  if (!file.type.startsWith('image/')) {
+  const mimeType = filePart.type || 'image/jpeg';
+  if (!mimeType.startsWith('image/')) {
     throw createError({ statusCode: 400, statusMessage: 'File must be an image' });
   }
 
   // Validate file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
+  if (filePart.data.length > 5 * 1024 * 1024) {
     throw createError({ statusCode: 400, statusMessage: 'File size must be less than 5MB' });
   }
 
@@ -50,15 +54,14 @@ export default defineEventHandler(async (event) => {
     }
 
     // Generate unique filename: userId/itemId-timestamp.ext
-    const ext = file.name.split('.').pop() || 'jpg';
+    const ext = filePart.filename.split('.').pop() || 'jpg';
     const fileName = `${userId}/${id}-${Date.now()}.${ext}`;
 
     // Upload to Supabase Storage
-    const fileBuffer = await file.arrayBuffer();
     const { error: uploadError } = await supabase.storage
       .from('item-photos')
-      .upload(fileName, fileBuffer, {
-        contentType: file.type,
+      .upload(fileName, filePart.data, {
+        contentType: mimeType,
         upsert: true,
       });
 

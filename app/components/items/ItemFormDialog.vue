@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
-import { itemSchema } from '~/validations/item';
-import type { ItemFormValues } from '~/validations/item';
-import { ITEM_CONDITIONS, ITEM_STATUSES } from '~/constants/item';
-import { useCategories } from '~/composables/useCategories';
-import { useLocations } from '~/composables/useLocations';
-import type { Item } from '~/types/item';
+import { useForm } from 'vee-validate';
+import { Button } from '~/components/ui/button';
+import { Checkbox } from '~/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
+import { Input } from '~/components/ui/input';
+import { ScrollArea } from '~/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -17,11 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select';
-import { Input } from '~/components/ui/input';
-import { Button } from '~/components/ui/button';
-import { ScrollArea } from '~/components/ui/scroll-area';
 import { Textarea } from '~/components/ui/textarea';
-import { Checkbox } from '~/components/ui/checkbox';
+import { useCategories } from '~/composables/useCategories';
+import { useLocations } from '~/composables/useLocations';
+import { ITEM_CONDITIONS, ITEM_STATUSES } from '~/constants/item';
+import type { Item } from '~/types/item';
+import type { ItemFormValues } from '~/validations/item';
+import { itemSchema } from '~/validations/item';
 
 const props = defineProps<{
   open: boolean;
@@ -62,7 +62,10 @@ watch(
           model: props.item.model,
           serialNumber: props.item.serialNumber,
           purchaseDate: props.item.purchaseDate,
-          purchasePrice: props.item.purchasePrice,
+          purchasePrice:
+            props.item.purchasePrice == null || props.item.purchasePrice === ''
+              ? undefined
+              : Number(props.item.purchasePrice),
           purchaseLocation: props.item.purchaseLocation,
           warrantyExpiry: props.item.warrantyExpiry,
           condition: props.item.condition,
@@ -246,7 +249,7 @@ const handlePriceInput = (e: Event, handleChange: (val: any) => void) => {
                         (e: Event) => {
                           const file = (e.target as HTMLInputElement).files?.[0];
                           if (file) {
-                            selectedPhotoFile.value = file;
+                            selectedPhotoFile = file;
                             handleChange(file.name);
                           }
                         }

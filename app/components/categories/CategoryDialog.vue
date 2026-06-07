@@ -91,7 +91,7 @@ const onSubmit = handleSubmit(async (values: CategorySchema) => {
 
 <template>
   <Dialog :open="open" @update:open="$emit('update:open', $event)">
-    <DialogContent class="sm:max-w-[425px]">
+    <DialogContent class="sm:max-w-106.25">
       <DialogHeader>
         <DialogTitle>{{ mode === 'edit' ? 'Edit Category' : 'Add Category' }}</DialogTitle>
         <DialogDescription>

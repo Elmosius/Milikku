@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const userId = await getAuthenticatedUserId(event);
 
   const id = getRouterParam(event, 'id');
-  
+
   if (!id) {
     throw createError({
       statusCode: 400,
@@ -25,6 +25,6 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Location not found',
     });
   }
-    
+
   return { success: true, message: 'Location deleted successfully' };
 });

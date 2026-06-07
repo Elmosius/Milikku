@@ -1,30 +1,35 @@
 <script setup lang="ts">
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from '~/components/ui/table'
-import { Skeleton } from '~/components/ui/skeleton'
-import { Button } from '~/components/ui/button'
-import { Badge } from '~/components/ui/badge'
-import { Eye, Edit, Trash2 } from 'lucide-vue-next'
-import type { Item } from '~/types/item'
-import { SKELETON_ROW_COUNT } from '~/constants/item'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '~/components/ui/table';
+import { Skeleton } from '~/components/ui/skeleton';
+import { Button } from '~/components/ui/button';
+import { Badge } from '~/components/ui/badge';
+import { Eye, Edit, Trash2 } from 'lucide-vue-next';
+import type { Item } from '~/types/item';
+import { SKELETON_ROW_COUNT } from '~/constants/item';
 
 defineProps<{
-  items: Item[]
-  pending: boolean
-  getCategoryName: (id: string | null | undefined) => string
-  getLocationName: (id: string | null | undefined) => string
-}>()
+  items: Item[];
+  pending: boolean;
+  getCategoryName: (id: string | null | undefined) => string;
+  getLocationName: (id: string | null | undefined) => string;
+}>();
 
 defineEmits<{
-  view: [item: Item]
-  edit: [item: Item]
-  delete: [item: Item]
-}>()
+  view: [item: Item];
+  edit: [item: Item];
+  delete: [item: Item];
+}>();
 </script>
 
 <template>
-  <div class="rounded-md border bg-card">
+  <div class="bg-card rounded-md border">
     <Table>
       <TableHeader>
         <TableRow>
@@ -46,15 +51,13 @@ defineEmits<{
             <TableCell><Skeleton class="h-5 w-12" /></TableCell>
             <TableCell><Skeleton class="h-5 w-24" /></TableCell>
             <TableCell><Skeleton class="h-5 w-24" /></TableCell>
-            <TableCell class="text-right"><Skeleton class="h-8 w-24 ml-auto" /></TableCell>
+            <TableCell class="text-right"><Skeleton class="ml-auto h-8 w-24" /></TableCell>
           </TableRow>
         </template>
 
         <template v-else-if="items.length === 0">
           <TableRow>
-            <TableCell colspan="7" class="h-24 text-center">
-              No items found.
-            </TableCell>
+            <TableCell colspan="7" class="h-24 text-center"> No items found. </TableCell>
           </TableRow>
         </template>
 
@@ -70,14 +73,19 @@ defineEmits<{
             <TableCell>
               <Badge variant="secondary">{{ item.status || '-' }}</Badge>
             </TableCell>
-            <TableCell class="text-right space-x-1">
+            <TableCell class="space-x-1 text-right">
               <Button variant="ghost" size="icon" @click="$emit('view', item)">
                 <Eye class="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="icon" @click="$emit('edit', item)">
                 <Edit class="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" @click="$emit('delete', item)" class="text-destructive hover:text-destructive">
+              <Button
+                variant="ghost"
+                size="icon"
+                @click="$emit('delete', item)"
+                class="text-destructive hover:text-destructive"
+              >
                 <Trash2 class="h-4 w-4" />
               </Button>
             </TableCell>

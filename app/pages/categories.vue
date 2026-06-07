@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useCategories } from '~/composables/useCategories'
-import CategoriesHeader from '~/components/categories/CategoriesHeader.vue'
-import CategoriesTable from '~/components/categories/CategoriesTable.vue'
-import CategoryDialog from '~/components/categories/CategoryDialog.vue'
-import DeleteCategoryDialog from '~/components/categories/DeleteCategoryDialog.vue'
+import { useCategories } from '~/composables/useCategories';
+import CategoriesHeader from '~/components/categories/CategoriesHeader.vue';
+import CategoriesTable from '~/components/categories/CategoriesTable.vue';
+import CategoryDialog from '~/components/categories/CategoryDialog.vue';
+import DeleteCategoryDialog from '~/components/categories/DeleteCategoryDialog.vue';
 
 const {
   categories,
@@ -19,7 +19,7 @@ const {
   openEditDialog,
   confirmDelete,
   handleDelete,
-} = useCategories()
+} = useCategories();
 </script>
 
 <template>

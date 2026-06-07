@@ -1,6 +1,6 @@
-import { ref } from 'vue'
-import { toast } from 'vue-sonner'
-import type { Category } from '~/types/category'
+import { ref } from 'vue';
+import { toast } from 'vue-sonner';
+import type { Category } from '~/types/category';
 
 export function useCategories() {
   const {
@@ -9,53 +9,53 @@ export function useCategories() {
     refresh,
   } = useFetch<Category[]>('/api/categories', {
     default: () => [],
-  })
+  });
 
   // Dialog state
-  const dialogOpen = ref(false)
-  const dialogMode = ref<'create' | 'edit'>('create')
-  const selectedCategory = ref<Category | null>(null)
+  const dialogOpen = ref(false);
+  const dialogMode = ref<'create' | 'edit'>('create');
+  const selectedCategory = ref<Category | null>(null);
 
   // Delete state
-  const deleteAlertOpen = ref(false)
-  const categoryToDelete = ref<Category | null>(null)
-  const isDeleting = ref(false)
+  const deleteAlertOpen = ref(false);
+  const categoryToDelete = ref<Category | null>(null);
+  const isDeleting = ref(false);
 
   const openCreateDialog = () => {
-    dialogMode.value = 'create'
-    selectedCategory.value = null
-    dialogOpen.value = true
-  }
+    dialogMode.value = 'create';
+    selectedCategory.value = null;
+    dialogOpen.value = true;
+  };
 
   const openEditDialog = (category: Category) => {
-    dialogMode.value = 'edit'
-    selectedCategory.value = category
-    dialogOpen.value = true
-  }
+    dialogMode.value = 'edit';
+    selectedCategory.value = category;
+    dialogOpen.value = true;
+  };
 
   const confirmDelete = (category: Category) => {
-    categoryToDelete.value = category
-    deleteAlertOpen.value = true
-  }
+    categoryToDelete.value = category;
+    deleteAlertOpen.value = true;
+  };
 
   const handleDelete = async () => {
-    if (!categoryToDelete.value) return
+    if (!categoryToDelete.value) return;
 
-    isDeleting.value = true
+    isDeleting.value = true;
     try {
       await $fetch(`/api/categories/${categoryToDelete.value.id}`, {
         method: 'DELETE',
-      })
-      toast.success('Category deleted successfully')
-      await refresh()
+      });
+      toast.success('Category deleted successfully');
+      await refresh();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete category')
+      toast.error(error.message || 'Failed to delete category');
     } finally {
-      isDeleting.value = false
-      deleteAlertOpen.value = false
-      categoryToDelete.value = null
+      isDeleting.value = false;
+      deleteAlertOpen.value = false;
+      categoryToDelete.value = null;
     }
-  }
+  };
 
   return {
     categories,
@@ -71,5 +71,5 @@ export function useCategories() {
     openEditDialog,
     confirmDelete,
     handleDelete,
-  }
+  };
 }

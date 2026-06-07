@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Category } from '~/types/category'
+import type { Category } from '~/types/category';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,18 +9,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '~/components/ui/alert-dialog'
+} from '~/components/ui/alert-dialog';
 
 defineProps<{
-  open: boolean
-  category: Category | null
-  isDeleting: boolean
-}>()
+  open: boolean;
+  category: Category | null;
+  isDeleting: boolean;
+}>();
 
 defineEmits<{
-  (e: 'update:open', value: boolean): void
-  (e: 'confirm'): void
-}>()
+  (e: 'update:open', value: boolean): void;
+  (e: 'confirm'): void;
+}>();
 </script>
 
 <template>

@@ -1,25 +1,14 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import { itemSchema } from '~/validations/item'
-import type { ItemFormValues } from '~/validations/item'
-import { ITEM_CONDITIONS, ITEM_STATUSES } from '~/constants/item'
-import { useCategories } from '~/composables/useCategories'
-import { useLocations } from '~/composables/useLocations'
-import type { Item } from '~/types/item'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '~/components/ui/dialog'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '~/components/ui/form'
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import { itemSchema } from '~/validations/item';
+import type { ItemFormValues } from '~/validations/item';
+import { ITEM_CONDITIONS, ITEM_STATUSES } from '~/constants/item';
+import { useCategories } from '~/composables/useCategories';
+import { useLocations } from '~/composables/useLocations';
+import type { Item } from '~/types/item';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import {
   Select,
   SelectContent,
@@ -27,82 +16,121 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '~/components/ui/select'
-import { Input } from '~/components/ui/input'
-import { Button } from '~/components/ui/button'
-import { ScrollArea } from '~/components/ui/scroll-area'
-import { Textarea } from '~/components/ui/textarea'
-import { Checkbox } from '~/components/ui/checkbox'
+} from '~/components/ui/select';
+import { Input } from '~/components/ui/input';
+import { Button } from '~/components/ui/button';
+import { ScrollArea } from '~/components/ui/scroll-area';
+import { Textarea } from '~/components/ui/textarea';
+import { Checkbox } from '~/components/ui/checkbox';
 
 const props = defineProps<{
-  open: boolean
-  mode: 'create' | 'edit'
-  item: Item | null
-}>()
+  open: boolean;
+  mode: 'create' | 'edit';
+  item: Item | null;
+}>();
 
 const emit = defineEmits<{
-  'update:open': [val: boolean]
-  submit: [values: ItemFormValues]
-}>()
+  'update:open': [val: boolean];
+  submit: [values: ItemFormValues, photoFile: File | null];
+}>();
 
-const formSchema = toTypedSchema(itemSchema)
+const selectedPhotoFile = ref<File | null>(null);
+
+const formSchema = toTypedSchema(itemSchema);
 const { handleSubmit, resetForm, setValues } = useForm({
   validationSchema: formSchema,
   initialValues: {
     quantity: 1,
     isFavorite: false,
   },
-})
+});
 
-const { categories } = useCategories()
-const { locations } = useLocations()
+const { categories } = useCategories();
+const { locations } = useLocations();
 
-watch(() => props.open, (isOpen) => {
-  if (isOpen) {
-    if (props.mode === 'edit' && props.item) {
-      setValues({
-        name: props.item.name,
-        categoryId: props.item.categoryId || undefined,
-        locationId: props.item.locationId || undefined,
-        brand: props.item.brand,
-        model: props.item.model,
-        serialNumber: props.item.serialNumber,
-        purchaseDate: props.item.purchaseDate,
-        purchasePrice: props.item.purchasePrice,
-        purchaseLocation: props.item.purchaseLocation,
-        warrantyExpiry: props.item.warrantyExpiry,
-        condition: props.item.condition,
-        status: props.item.status,
-        notes: props.item.notes,
-        quantity: props.item.quantity,
-        isFavorite: props.item.isFavorite,
-      })
-    } else {
-      resetForm()
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (isOpen) {
+      selectedPhotoFile.value = null;
+      if (props.mode === 'edit' && props.item) {
+        setValues({
+          name: props.item.name,
+          categoryId: props.item.categoryId || undefined,
+          locationId: props.item.locationId || undefined,
+          brand: props.item.brand,
+          model: props.item.model,
+          serialNumber: props.item.serialNumber,
+          purchaseDate: props.item.purchaseDate,
+          purchasePrice: props.item.purchasePrice,
+          purchaseLocation: props.item.purchaseLocation,
+          warrantyExpiry: props.item.warrantyExpiry,
+          condition: props.item.condition,
+          status: props.item.status,
+          notes: props.item.notes,
+          quantity: props.item.quantity,
+          isFavorite: props.item.isFavorite,
+        });
+      } else {
+        resetForm();
+      }
     }
-  }
-})
+  },
+);
 
 const onSubmit = handleSubmit((values) => {
-  emit('submit', values as ItemFormValues)
-  emit('update:open', false)
-})
+  emit('submit', values as ItemFormValues, selectedPhotoFile.value);
+});
+
+const formatPriceInput = (value: number | string | null | undefined): string => {
+  if (value === null || value === undefined || value === '') return '';
+  const num =
+    typeof value === 'number' ? value : parseInt(value.toString().replace(/[^0-9]/g, ''), 10);
+  if (isNaN(num)) return '';
+  return new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(num);
+};
+
+const handlePriceInput = (e: Event, handleChange: (val: any) => void) => {
+  const target = e.target as HTMLInputElement;
+  const rawValue = target.value;
+
+  const selectionStart = target.selectionStart || 0;
+  const oldLength = rawValue.length;
+
+  const numericValue = rawValue.replace(/[^0-9]/g, '');
+  const num = numericValue ? parseInt(numericValue, 10) : undefined;
+
+  handleChange(num);
+
+  const formattedValue = formatPriceInput(num);
+  target.value = formattedValue;
+
+  const newLength = formattedValue.length;
+  const lengthDiff = newLength - oldLength;
+
+  let newSelectionStart = selectionStart + lengthDiff;
+  newSelectionStart = Math.max(0, Math.min(newSelectionStart, newLength));
+
+  target.setSelectionRange(newSelectionStart, newSelectionStart);
+};
 </script>
 
 <template>
   <Dialog :open="open" @update:open="emit('update:open', $event)">
-    <DialogContent class="sm:max-w-3xl p-0">
-      <DialogHeader class="px-6 py-4 border-b">
+    <DialogContent class="p-0 sm:max-w-3xl">
+      <DialogHeader class="border-b px-6 py-4">
         <DialogTitle>{{ mode === 'create' ? 'Add New Item' : 'Edit Item' }}</DialogTitle>
       </DialogHeader>
 
       <ScrollArea class="max-h-[80vh] w-full">
-        <form @submit="onSubmit" class="p-6 space-y-6 w-full">
-
+        <form @submit="onSubmit" class="w-full space-y-6 p-6">
           <!-- Basic Info -->
           <div class="space-y-4">
             <h3 class="text-lg font-medium">Basic Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+            <div class="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
               <FormField v-slot="{ componentField }" name="name">
                 <FormItem class="relative pb-4">
                   <FormLabel>Name <span class="text-destructive">*</span></FormLabel>
@@ -134,7 +162,9 @@ const onSubmit = handleSubmit((values) => {
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</SelectItem>
+                        <SelectItem v-for="c in categories" :key="c.id" :value="c.id">{{
+                          c.name
+                        }}</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -153,7 +183,9 @@ const onSubmit = handleSubmit((values) => {
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem v-for="l in locations" :key="l.id" :value="l.id">{{ l.name }}</SelectItem>
+                        <SelectItem v-for="l in locations" :key="l.id" :value="l.id">{{
+                          l.name
+                        }}</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -172,7 +204,9 @@ const onSubmit = handleSubmit((values) => {
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem v-for="s in ITEM_STATUSES" :key="s" :value="s">{{ s }}</SelectItem>
+                        <SelectItem v-for="s in ITEM_STATUSES" :key="s" :value="s">{{
+                          s
+                        }}</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -191,7 +225,9 @@ const onSubmit = handleSubmit((values) => {
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem v-for="c in ITEM_CONDITIONS" :key="c" :value="c">{{ c }}</SelectItem>
+                        <SelectItem v-for="c in ITEM_CONDITIONS" :key="c" :value="c">{{
+                          c
+                        }}</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -200,20 +236,31 @@ const onSubmit = handleSubmit((values) => {
               </FormField>
 
               <FormField v-slot="{ handleChange }" name="photoUrl">
-                <FormItem class="col-span-1 md:col-span-2 relative pb-4">
+                <FormItem class="relative col-span-1 pb-4 md:col-span-2">
                   <FormLabel>Photo Item</FormLabel>
                   <FormControl>
-                    <Input type="file" accept="image/*" @change="(e: Event) => {
-                      const file = (e.target as HTMLInputElement).files?.[0];
-                      if (file) handleChange(file.name);
-                    }" />
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      @change="
+                        (e: Event) => {
+                          const file = (e.target as HTMLInputElement).files?.[0];
+                          if (file) {
+                            selectedPhotoFile.value = file;
+                            handleChange(file.name);
+                          }
+                        }
+                      "
+                    />
                   </FormControl>
                   <FormMessage class="absolute bottom-0 left-0 text-xs" />
                 </FormItem>
               </FormField>
 
               <FormField v-slot="{ value, handleChange }" name="isFavorite" type="checkbox">
-                <FormItem class="col-span-1 md:col-span-2 flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem
+                  class="col-span-1 flex flex-row items-start space-y-0 space-x-3 rounded-md border p-4 md:col-span-2"
+                >
                   <FormControl>
                     <Checkbox :checked="value" @update:checked="handleChange" />
                   </FormControl>
@@ -228,7 +275,7 @@ const onSubmit = handleSubmit((values) => {
           <!-- Details -->
           <div class="space-y-4">
             <h3 class="text-lg font-medium">Details</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+            <div class="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
               <FormField v-slot="{ componentField }" name="brand">
                 <FormItem class="relative pb-4">
                   <FormLabel>Brand</FormLabel>
@@ -264,12 +311,22 @@ const onSubmit = handleSubmit((values) => {
           <!-- Purchase & Warranty -->
           <div class="space-y-4">
             <h3 class="text-lg font-medium">Purchase & Warranty</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
-              <FormField v-slot="{ componentField }" name="purchasePrice">
+            <div class="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+              <FormField v-slot="{ value, handleChange }" name="purchasePrice">
                 <FormItem class="relative pb-4">
                   <FormLabel>Purchase Price</FormLabel>
                   <FormControl>
-                    <Input type="number" min="0" placeholder="0" v-bind="componentField" />
+                    <div class="relative flex items-center">
+                      <span class="text-muted-foreground absolute left-3 text-sm">Rp</span>
+                      <Input
+                        type="text"
+                        inputmode="numeric"
+                        class="pl-9"
+                        placeholder="0"
+                        :value="formatPriceInput(value)"
+                        @input="(e: Event) => handlePriceInput(e, handleChange)"
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage class="absolute bottom-0 left-0 text-xs" />
                 </FormItem>
@@ -311,14 +368,20 @@ const onSubmit = handleSubmit((values) => {
             <FormItem class="relative pb-4">
               <FormLabel>Notes</FormLabel>
               <FormControl>
-                <Textarea placeholder="Any additional details..." class="resize-none" v-bind="componentField" />
+                <Textarea
+                  placeholder="Any additional details..."
+                  class="resize-none"
+                  v-bind="componentField"
+                />
               </FormControl>
               <FormMessage class="absolute bottom-0 left-0 text-xs" />
             </FormItem>
           </FormField>
 
           <div class="flex justify-end gap-4 pb-4">
-            <Button type="button" variant="outline" @click="emit('update:open', false)">Cancel</Button>
+            <Button type="button" variant="outline" @click="emit('update:open', false)"
+              >Cancel</Button
+            >
             <Button type="submit">Save</Button>
           </div>
         </form>

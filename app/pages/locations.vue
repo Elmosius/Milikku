@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useLocations } from '~/composables/useLocations'
-import LocationsHeader from '~/components/locations/LocationsHeader.vue'
-import LocationsTable from '~/components/locations/LocationsTable.vue'
-import LocationDialog from '~/components/locations/LocationDialog.vue'
-import DeleteLocationDialog from '~/components/locations/DeleteLocationDialog.vue'
+import { useLocations } from '~/composables/useLocations';
+import LocationsHeader from '~/components/locations/LocationsHeader.vue';
+import LocationsTable from '~/components/locations/LocationsTable.vue';
+import LocationDialog from '~/components/locations/LocationDialog.vue';
+import DeleteLocationDialog from '~/components/locations/DeleteLocationDialog.vue';
 
 const {
   locations,
@@ -19,7 +19,7 @@ const {
   openEditDialog,
   confirmDelete,
   handleDelete,
-} = useLocations()
+} = useLocations();
 </script>
 
 <template>

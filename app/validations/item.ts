@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { ITEM_CONDITIONS, ITEM_STATUSES } from '~/constants/item'
+import { z } from 'zod';
+import { ITEM_CONDITIONS, ITEM_STATUSES } from '~/constants/item';
 
 export const itemSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
@@ -17,6 +17,6 @@ export const itemSchema = z.object({
   notes: z.string().max(1000).nullable().optional(),
   quantity: z.coerce.number().int().min(1, 'Quantity must be at least 1').default(1),
   isFavorite: z.boolean().default(false),
-})
+});
 
-export type ItemFormValues = z.infer<typeof itemSchema>
+export type ItemFormValues = z.infer<typeof itemSchema>;

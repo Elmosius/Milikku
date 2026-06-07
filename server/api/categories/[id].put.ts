@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const userId = await getAuthenticatedUserId(event);
 
   const id = getRouterParam(event, 'id');
-  
+
   if (!id) {
     throw createError({
       statusCode: 400,
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event);
-  
+
   const updateData: Partial<typeof categories.$inferInsert> = {
     updatedAt: new Date(),
   };
@@ -36,6 +36,6 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Category not found',
     });
   }
-    
+
   return updatedCategory;
 });

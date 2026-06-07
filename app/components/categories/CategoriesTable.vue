@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Folder, Pencil, Trash2 } from 'lucide-vue-next'
-import type { Category } from '~/types/category'
-import { iconMap } from '~/constants/icons'
-import { Button } from '~/components/ui/button'
-import { Skeleton } from '~/components/ui/skeleton'
+import { Folder, Pencil, Trash2 } from 'lucide-vue-next';
+import type { Category } from '~/types/category';
+import { iconMap } from '~/constants/icons';
+import { Button } from '~/components/ui/button';
+import { Skeleton } from '~/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -11,17 +11,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '~/components/ui/table'
+} from '~/components/ui/table';
 
 defineProps<{
-  categories: Category[]
-  pending: boolean
-}>()
+  categories: Category[];
+  pending: boolean;
+}>();
 
 defineEmits<{
-  (e: 'edit', category: Category): void
-  (e: 'delete', category: Category): void
-}>()
+  (e: 'edit', category: Category): void;
+  (e: 'delete', category: Category): void;
+}>();
 </script>
 
 <template>

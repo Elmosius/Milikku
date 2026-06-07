@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { watch } from 'vue'
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm } from 'vee-validate'
-import { categorySchema } from '~/validations/category'
-import type { CategorySchema } from '~/validations/category'
-import { toast } from 'vue-sonner'
+import { watch } from 'vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import { categorySchema } from '~/validations/category';
+import type { CategorySchema } from '~/validations/category';
+import { toast } from 'vue-sonner';
 import {
   Dialog,
   DialogContent,
@@ -12,29 +12,23 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '~/components/ui/dialog'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '~/components/ui/form'
-import { Input } from '~/components/ui/input'
-import { Button } from '~/components/ui/button'
-import { availableIcons } from '~/constants/icons'
+} from '~/components/ui/dialog';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
+import { Input } from '~/components/ui/input';
+import { Button } from '~/components/ui/button';
+import { availableIcons } from '~/constants/icons';
 const props = defineProps<{
-  open: boolean
-  mode: 'create' | 'edit'
-  category?: { id: string; name: string; icon?: string | null; color?: string | null } | null
-}>()
+  open: boolean;
+  mode: 'create' | 'edit';
+  category?: { id: string; name: string; icon?: string | null; color?: string | null } | null;
+}>();
 
 const emit = defineEmits<{
-  (e: 'update:open', value: boolean): void
-  (e: 'success'): void
-}>()
+  (e: 'update:open', value: boolean): void;
+  (e: 'success'): void;
+}>();
 
-const formSchema = toTypedSchema(categorySchema)
+const formSchema = toTypedSchema(categorySchema);
 
 const { handleSubmit, setValues, resetForm, isSubmitting } = useForm({
   validationSchema: formSchema,
@@ -43,50 +37,55 @@ const { handleSubmit, setValues, resetForm, isSubmitting } = useForm({
     icon: 'Folder',
     color: '#EF6351',
   },
-})
+});
 
 // Initialize form when opening dialog or mode/category changes
-watch(() => [props.open, props.category], ([isOpen]) => {
-  if (isOpen) {
-    if (props.mode === 'edit' && props.category) {
-      setValues({ 
-        name: props.category.name,
-        icon: props.category.icon || undefined,
-        color: props.category.color || undefined,
-      })
-    } else {
-      resetForm()
+watch(
+  () => [props.open, props.category],
+  ([isOpen]) => {
+    if (isOpen) {
+      if (props.mode === 'edit' && props.category) {
+        setValues({
+          name: props.category.name,
+          icon: props.category.icon || undefined,
+          color: props.category.color || undefined,
+        });
+      } else {
+        resetForm();
+      }
     }
-  }
-})
+  },
+);
 
 const onSubmit = handleSubmit(async (values: CategorySchema) => {
   try {
-    const url = props.mode === 'edit' && props.category 
-      ? `/api/categories/${props.category.id}` 
-      : '/api/categories'
-      
-    const method = props.mode === 'edit' ? 'PUT' : 'POST'
+    const url =
+      props.mode === 'edit' && props.category
+        ? `/api/categories/${props.category.id}`
+        : '/api/categories';
+
+    const method = props.mode === 'edit' ? 'PUT' : 'POST';
 
     await $fetch(url, {
       method,
       body: values,
-    })
+    });
 
-    toast.success(props.mode === 'edit' ? 'Category updated successfully' : 'Category created successfully')
-    
+    toast.success(
+      props.mode === 'edit' ? 'Category updated successfully' : 'Category created successfully',
+    );
+
     // Close the dialog FIRST to avoid Radix Vue focus-trap issues when background DOM changes
-    emit('update:open', false)
-    
+    emit('update:open', false);
+
     // Then tell the parent to refetch data after dialog has started closing
     setTimeout(() => {
-      emit('success')
-    }, 150)
-    
+      emit('success');
+    }, 150);
   } catch (error: any) {
-    toast.error(error.message || 'An error occurred')
+    toast.error(error.message || 'An error occurred');
   }
-})
+});
 </script>
 
 <template>
@@ -95,10 +94,14 @@ const onSubmit = handleSubmit(async (values: CategorySchema) => {
       <DialogHeader>
         <DialogTitle>{{ mode === 'edit' ? 'Edit Category' : 'Add Category' }}</DialogTitle>
         <DialogDescription>
-          {{ mode === 'edit' ? 'Update the category details.' : 'Add a new category to organize your assets.' }}
+          {{
+            mode === 'edit'
+              ? 'Update the category details.'
+              : 'Add a new category to organize your assets.'
+          }}
         </DialogDescription>
       </DialogHeader>
-      
+
       <form @submit="onSubmit" class="space-y-4">
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
@@ -109,19 +112,23 @@ const onSubmit = handleSubmit(async (values: CategorySchema) => {
             <FormMessage />
           </FormItem>
         </FormField>
-        
+
         <div class="space-y-4">
           <FormField v-slot="{ value, handleChange }" name="icon">
             <FormItem>
               <FormLabel>Icon</FormLabel>
               <FormControl>
                 <div class="flex flex-wrap gap-2">
-                  <button 
-                    v-for="icon in availableIcons" 
+                  <button
+                    v-for="icon in availableIcons"
                     :key="icon.name"
                     type="button"
-                    class="flex h-10 w-10 items-center justify-center rounded-md border transition-all hover:bg-muted"
-                    :class="value === icon.name ? 'border-primary bg-primary/10 text-primary' : 'border-input bg-background text-muted-foreground'"
+                    class="hover:bg-muted flex h-10 w-10 items-center justify-center rounded-md border transition-all"
+                    :class="
+                      value === icon.name
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-input bg-background text-muted-foreground'
+                    "
                     @click="handleChange(icon.name)"
                   >
                     <component :is="icon.component" class="h-5 w-5" stroke-width="1.5" />
@@ -131,24 +138,33 @@ const onSubmit = handleSubmit(async (values: CategorySchema) => {
               <FormMessage />
             </FormItem>
           </FormField>
-          
+
           <FormField v-slot="{ componentField }" name="color">
             <FormItem>
               <FormLabel>Color</FormLabel>
               <FormControl>
-                <Input type="color" class="h-10 w-full cursor-pointer p-1" v-bind="componentField" />
+                <Input
+                  type="color"
+                  class="h-10 w-full cursor-pointer p-1"
+                  v-bind="componentField"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           </FormField>
         </div>
-        
+
         <DialogFooter>
-          <Button type="button" variant="outline" @click="$emit('update:open', false)" :disabled="isSubmitting">
+          <Button
+            type="button"
+            variant="outline"
+            @click="$emit('update:open', false)"
+            :disabled="isSubmitting"
+          >
             Cancel
           </Button>
           <Button type="submit" :disabled="isSubmitting">
-            {{ isSubmitting ? 'Saving...' : (mode === 'edit' ? 'Save Changes' : 'Create') }}
+            {{ isSubmitting ? 'Saving...' : mode === 'edit' ? 'Save Changes' : 'Create' }}
           </Button>
         </DialogFooter>
       </form>

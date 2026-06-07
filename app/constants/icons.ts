@@ -1,4 +1,4 @@
-import type { Component } from 'vue'
+import type { Component } from 'vue';
 import {
   Book,
   Briefcase,
@@ -19,7 +19,7 @@ import {
   Smartphone,
   Star,
   Video,
-} from 'lucide-vue-next'
+} from 'lucide-vue-next';
 
 export const availableIcons: { name: string; component: Component }[] = [
   { name: 'Folder', component: Folder },
@@ -41,8 +41,8 @@ export const availableIcons: { name: string; component: Component }[] = [
   { name: 'Video', component: Video },
   { name: 'MapPin', component: MapPin },
   { name: 'Gift', component: Gift },
-]
+];
 
 export const iconMap: Record<string, Component> = Object.fromEntries(
   availableIcons.map((icon) => [icon.name, icon.component]),
-)
+);

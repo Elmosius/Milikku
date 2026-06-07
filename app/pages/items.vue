@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useItems } from '~/composables/useItems'
-import ItemsHeader from '~/components/items/ItemsHeader.vue'
-import ItemsTable from '~/components/items/ItemsTable.vue'
-import ItemDetailSheet from '~/components/items/ItemDetailSheet.vue'
-import ItemFormDialog from '~/components/items/ItemFormDialog.vue'
-import DeleteItemDialog from '~/components/items/DeleteItemDialog.vue'
+import { useItems } from '~/composables/useItems';
+import ItemsHeader from '~/components/items/ItemsHeader.vue';
+import ItemsTable from '~/components/items/ItemsTable.vue';
+import ItemDetailSheet from '~/components/items/ItemDetailSheet.vue';
+import ItemFormDialog from '~/components/items/ItemFormDialog.vue';
+import DeleteItemDialog from '~/components/items/DeleteItemDialog.vue';
 
 const {
   items,
@@ -27,7 +27,7 @@ const {
   handleDelete,
   getCategoryName,
   getLocationName,
-} = useItems()
+} = useItems();
 </script>
 
 <template>

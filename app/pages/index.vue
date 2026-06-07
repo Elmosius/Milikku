@@ -6,15 +6,15 @@
   <div class="flex flex-col gap-4">
     <!-- Quick Stats Placeholders -->
     <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-      <div class="bg-card rounded-xl border p-6 transition-all hover:bg-muted/20">
+      <div class="bg-card hover:bg-muted/20 rounded-xl border p-6 transition-all">
         <h3 class="text-muted-foreground text-sm font-medium tracking-wide">Total Items</h3>
         <p class="text-foreground mt-2 text-xl font-bold">0</p>
       </div>
-      <div class="bg-card rounded-xl border p-6 transition-all hover:bg-muted/20">
+      <div class="bg-card hover:bg-muted/20 rounded-xl border p-6 transition-all">
         <h3 class="text-muted-foreground text-sm font-medium tracking-wide">Total Value</h3>
         <p class="text-foreground mt-2 text-xl font-bold">Rp 0</p>
       </div>
-      <div class="bg-card rounded-xl border p-6 transition-all hover:bg-muted/20">
+      <div class="bg-card hover:bg-muted/20 rounded-xl border p-6 transition-all">
         <h3 class="text-muted-foreground text-sm font-medium tracking-wide">Categories</h3>
         <p class="text-foreground mt-2 text-xl font-bold">0</p>
       </div>

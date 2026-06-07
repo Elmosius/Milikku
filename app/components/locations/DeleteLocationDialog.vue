@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Location } from '~/types/location'
+import type { Location } from '~/types/location';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,18 +9,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '~/components/ui/alert-dialog'
+} from '~/components/ui/alert-dialog';
 
 defineProps<{
-  open: boolean
-  location: Location | null
-  isDeleting: boolean
-}>()
+  open: boolean;
+  location: Location | null;
+  isDeleting: boolean;
+}>();
 
 defineEmits<{
-  (e: 'update:open', value: boolean): void
-  (e: 'confirm'): void
-}>()
+  (e: 'update:open', value: boolean): void;
+  (e: 'confirm'): void;
+}>();
 </script>
 
 <template>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Folder, Pencil, Trash2 } from 'lucide-vue-next'
-import type { Location } from '~/types/location'
-import { locationIconMap as iconMap } from '~/constants/locationIcons'
-import { Button } from '~/components/ui/button'
-import { Skeleton } from '~/components/ui/skeleton'
+import { Folder, Pencil, Trash2 } from 'lucide-vue-next';
+import type { Location } from '~/types/location';
+import { locationIconMap as iconMap } from '~/constants/locationIcons';
+import { Button } from '~/components/ui/button';
+import { Skeleton } from '~/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -11,17 +11,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '~/components/ui/table'
+} from '~/components/ui/table';
 
 defineProps<{
-  locations: Location[]
-  pending: boolean
-}>()
+  locations: Location[];
+  pending: boolean;
+}>();
 
 defineEmits<{
-  (e: 'edit', location: Location): void
-  (e: 'delete', location: Location): void
-}>()
+  (e: 'edit', location: Location): void;
+  (e: 'delete', location: Location): void;
+}>();
 </script>
 
 <template>
@@ -70,7 +70,7 @@ defineEmits<{
               <Folder v-else class="text-muted-foreground h-6 w-6" stroke-width="1.5" />
             </TableCell>
             <TableCell class="font-medium">{{ location.name }}</TableCell>
-            <TableCell class="truncate max-w-xs" :title="location.description || ''">
+            <TableCell class="max-w-xs truncate" :title="location.description || ''">
               {{ location.description || '-' }}
             </TableCell>
             <TableCell>{{

@@ -10,6 +10,6 @@ export default defineEventHandler(async (event) => {
     .from(locations)
     .where(eq(locations.userId, userId))
     .orderBy(locations.createdAt);
-    
+
   return userLocations;
 });

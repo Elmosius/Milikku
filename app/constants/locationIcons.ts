@@ -1,4 +1,4 @@
-import type { Component } from 'vue'
+import type { Component } from 'vue';
 import {
   Archive,
   Armchair,
@@ -22,7 +22,7 @@ import {
   Store,
   Tv,
   Warehouse,
-} from 'lucide-vue-next'
+} from 'lucide-vue-next';
 
 export const locationIcons: { name: string; component: Component }[] = [
   { name: 'MapPin', component: MapPin },
@@ -47,8 +47,8 @@ export const locationIcons: { name: string; component: Component }[] = [
   { name: 'Coffee', component: Coffee },
   { name: 'Briefcase', component: Briefcase },
   { name: 'Car', component: Car },
-]
+];
 
 export const locationIconMap: Record<string, Component> = Object.fromEntries(
   locationIcons.map((icon) => [icon.name, icon.component]),
-)
+);

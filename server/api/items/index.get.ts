@@ -1,6 +1,6 @@
 import { db } from '../../utils/db';
 import { items } from '../../database/schema';
-import { eq, desc, asc, and, ilike, or } from 'drizzle-orm';
+import { eq, desc, asc, and, ilike, or, count } from 'drizzle-orm';
 
 export default defineEventHandler(async (event) => {
   const userId = await getAuthenticatedUserId(event);
@@ -13,6 +13,10 @@ export default defineEventHandler(async (event) => {
   const status = query.status as string | undefined;
   const isFavorite = query.isFavorite as string | undefined;
   const sortBy = query.sortBy as string | undefined;
+  
+  const page = Math.max(1, parseInt(query.page as string || '1', 10));
+  const limit = Math.max(1, parseInt(query.limit as string || '10', 10));
+  const offset = (page - 1) * limit;
 
   const filters: any[] = [eq(items.userId, userId)];
 
@@ -43,11 +47,29 @@ export default defineEventHandler(async (event) => {
     orderFn = desc(items.name);
   }
 
+  // Get total count matching current filters
+  const [totalResult] = await db
+    .select({ total: count() })
+    .from(items)
+    .where(and(...filters));
+  const totalItems = totalResult?.total || 0;
+
+  // Get paginated items
   const userItems = await db
     .select()
     .from(items)
     .where(and(...filters))
-    .orderBy(orderFn);
+    .orderBy(orderFn)
+    .limit(limit)
+    .offset(offset);
 
-  return userItems;
+  return {
+    items: userItems,
+    pagination: {
+      total: totalItems,
+      page,
+      limit,
+      totalPages: Math.ceil(totalItems / limit),
+    },
+  };
 });

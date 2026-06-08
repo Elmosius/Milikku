@@ -14,6 +14,7 @@ import {
 } from '~/components/ui/dialog';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { Textarea } from '~/components/ui/textarea';
 import { locationIcons as availableIcons } from '~/constants/locationIcons';
 import type { LocationSchema } from '~/validations/location';
 import { locationSchema } from '~/validations/location';
@@ -118,11 +119,11 @@ const onSubmit = handleSubmit(async (values: LocationSchema) => {
           <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
-              <textarea
+              <Textarea
                 v-bind="componentField"
                 placeholder="Optional description"
-                class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-20 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-              ></textarea>
+                class="min-h-20 resize-none"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

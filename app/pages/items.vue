@@ -9,6 +9,7 @@ import DeleteItemDialog from '~/components/items/DeleteItemDialog.vue';
 
 const {
   items,
+  pagination,
   pending,
   queryParams,
   formOpen,
@@ -42,12 +43,15 @@ const {
     <ItemsTable
       :items="items"
       :pending="pending"
+      :pagination="pagination"
       :get-category="getCategory"
       :get-location="getLocation"
       @view="openDetailSheet"
       @edit="openEditForm"
       @delete="confirmDelete"
       @toggle-favorite="toggleFavorite"
+      @change-page="queryParams.page = $event"
+      @change-limit="queryParams.limit = $event"
     />
 
     <ItemFormDialog

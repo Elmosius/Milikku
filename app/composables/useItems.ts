@@ -14,15 +14,27 @@ export function useItems() {
     status: 'all',
     isFavorite: false,
     sortBy: 'newest',
+    page: 1,
+    limit: 10,
   });
 
   // --- Data fetching ---
   // Each query param must be an individual computed/ref for Nuxt to track changes
+  interface PaginatedResponse {
+    items: Item[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  }
+
   const {
-    data: items,
+    data: paginatedData,
     pending,
     refresh,
-  } = useFetch<Item[]>('/api/items', {
+  } = useFetch<PaginatedResponse>('/api/items', {
     query: {
       search: computed(() => queryParams.search || undefined),
       categoryId: computed(() => queryParams.categoryId !== 'all' ? queryParams.categoryId : undefined),
@@ -31,9 +43,38 @@ export function useItems() {
       status: computed(() => queryParams.status !== 'all' ? queryParams.status : undefined),
       isFavorite: computed(() => queryParams.isFavorite ? 'true' : undefined),
       sortBy: computed(() => queryParams.sortBy),
+      page: computed(() => queryParams.page),
+      limit: computed(() => queryParams.limit),
     },
-    default: () => [],
+    default: () => ({
+      items: [],
+      pagination: {
+        total: 0,
+        page: 1,
+        limit: 10,
+        totalPages: 0,
+      },
+    }),
   });
+
+  const items = computed(() => paginatedData.value?.items ?? []);
+  const pagination = computed(() => paginatedData.value?.pagination);
+
+  // Reset page to 1 when filters change
+  watch(
+    () => [
+      queryParams.search,
+      queryParams.categoryId,
+      queryParams.locationId,
+      queryParams.condition,
+      queryParams.status,
+      queryParams.isFavorite,
+      queryParams.sortBy,
+    ],
+    () => {
+      queryParams.page = 1;
+    }
+  );
 
   // --- Form state ---
   const formOpen = ref(false);
@@ -175,6 +216,7 @@ export function useItems() {
   return {
     // Data
     items,
+    pagination,
     pending,
     refresh,
     queryParams,

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onUnmounted, ref, watch } from 'vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import { Button } from '~/components/ui/button';
@@ -35,6 +36,13 @@ const emit = defineEmits<{
 }>();
 
 const selectedPhotoFile = ref<File | null>(null);
+const previewUrl = ref<string | null>(null);
+
+onUnmounted(() => {
+  if (previewUrl.value && previewUrl.value.startsWith('blob:')) {
+    URL.revokeObjectURL(previewUrl.value);
+  }
+});
 
 const formSchema = toTypedSchema(itemSchema);
 const { handleSubmit, resetForm, setValues } = useForm({
@@ -53,6 +61,11 @@ watch(
   (isOpen) => {
     if (isOpen) {
       selectedPhotoFile.value = null;
+      if (previewUrl.value && previewUrl.value.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl.value);
+      }
+      previewUrl.value = props.mode === 'edit' && props.item?.photoUrl ? props.item.photoUrl : null;
+      
       if (props.mode === 'edit' && props.item) {
         setValues({
           name: props.item.name,
@@ -118,6 +131,19 @@ const handlePriceInput = (e: Event, handleChange: (val: any) => void) => {
   newSelectionStart = Math.max(0, Math.min(newSelectionStart, newLength));
 
   target.setSelectionRange(newSelectionStart, newSelectionStart);
+};
+
+const handleFileChange = (e: Event, handleChange: (val: any) => void) => {
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    selectedPhotoFile.value = file;
+    handleChange(file.name);
+    if (previewUrl.value && previewUrl.value.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl.value);
+    }
+    previewUrl.value = URL.createObjectURL(file);
+  }
 };
 </script>
 
@@ -241,21 +267,21 @@ const handlePriceInput = (e: Event, handleChange: (val: any) => void) => {
               <FormField v-slot="{ handleChange }" name="photoUrl">
                 <FormItem class="relative col-span-1 pb-4 md:col-span-2">
                   <FormLabel>Photo Item</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      @change="
-                        (e: Event) => {
-                          const file = (e.target as HTMLInputElement).files?.[0];
-                          if (file) {
-                            selectedPhotoFile = file;
-                            handleChange(file.name);
-                          }
-                        }
-                      "
-                    />
-                  </FormControl>
+                  <div class="flex items-center gap-4 mt-2">
+                    <div
+                      v-if="previewUrl"
+                      class="h-16 w-16 overflow-hidden rounded-md border border-border shrink-0 bg-muted"
+                    >
+                      <img :src="previewUrl" alt="Item Preview" class="h-full w-full object-cover" />
+                    </div>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        @change="(e: Event) => handleFileChange(e, handleChange)"
+                      />
+                    </FormControl>
+                  </div>
                   <FormMessage class="absolute bottom-0 left-0 text-xs" />
                 </FormItem>
               </FormField>

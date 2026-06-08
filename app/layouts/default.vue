@@ -12,10 +12,12 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/composables/useAuth';
+import { useProfile } from '@/composables/useProfile';
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';
 
 const { user } = useAuth();
+const { profile } = useProfile();
 const route = useRoute();
 
 // Simple breadcrumb logic based on route path
@@ -67,7 +69,7 @@ const breadcrumbItems = computed(() => {
 
         <!-- Quick access user avatar -->
         <Avatar class="h-8 w-8 rounded-full border">
-          <AvatarImage :src="user?.user_metadata?.avatar_url" :alt="user?.email" />
+          <AvatarImage :src="profile?.avatarUrl" :alt="user?.email" />
           <AvatarFallback class="bg-primary/10 text-primary rounded-full text-xs font-semibold">
             {{ user?.email?.charAt(0).toUpperCase() || 'U' }}
           </AvatarFallback>

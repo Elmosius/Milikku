@@ -16,12 +16,14 @@ import { DollarSign, MapPin, Package, Tag } from 'lucide-vue-next';
 
 const { data: dashboard, pending } = useFetch('/api/dashboard');
 
+const currencyFormatter = new Intl.NumberFormat('id-ID', {
+  style: 'currency',
+  currency: 'IDR',
+  maximumFractionDigits: 0,
+});
+
 const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-  }).format(value);
+  return currencyFormatter.format(value);
 };
 
 const formatCurrencyShort = (value: number) => {

@@ -98,16 +98,20 @@ const onSubmit = handleSubmit((values) => {
   emit('submit', values as ItemFormValues, selectedPhotoFile.value);
 });
 
+const priceFormatter = new Intl.NumberFormat('id-ID', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
 const formatPriceInput = (value: number | string | null | undefined): string => {
   if (value === null || value === undefined || value === '') return '';
   const num =
     typeof value === 'number' ? value : parseInt(value.toString().replace(/[^0-9]/g, ''), 10);
   if (isNaN(num)) return '';
-  return new Intl.NumberFormat('id-ID', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(num);
+  return priceFormatter.format(num);
 };
+
+let priceTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const handlePriceInput = (e: Event, handleChange: (val: any) => void) => {
   const target = e.target as HTMLInputElement;
@@ -119,8 +123,6 @@ const handlePriceInput = (e: Event, handleChange: (val: any) => void) => {
   const numericValue = rawValue.replace(/[^0-9]/g, '');
   const num = numericValue ? parseInt(numericValue, 10) : undefined;
 
-  handleChange(num);
-
   const formattedValue = formatPriceInput(num);
   target.value = formattedValue;
 
@@ -131,6 +133,11 @@ const handlePriceInput = (e: Event, handleChange: (val: any) => void) => {
   newSelectionStart = Math.max(0, Math.min(newSelectionStart, newLength));
 
   target.setSelectionRange(newSelectionStart, newSelectionStart);
+
+  if (priceTimeout) clearTimeout(priceTimeout);
+  priceTimeout = setTimeout(() => {
+    handleChange(num);
+  }, 50);
 };
 
 const handleFileChange = (e: Event, handleChange: (val: any) => void) => {
@@ -351,10 +358,10 @@ const handleFileChange = (e: Event, handleChange: (val: any) => void) => {
                   <FormControl>
                     <div class="relative flex items-center">
                       <span class="text-muted-foreground absolute left-3 text-sm">Rp</span>
-                      <Input
+                      <input
                         type="text"
                         inputmode="numeric"
-                        class="pl-9"
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-9"
                         placeholder="0"
                         :value="formatPriceInput(value)"
                         @input="(e: Event) => handlePriceInput(e, handleChange)"

@@ -96,7 +96,7 @@ watch(
         </div>
       </SheetHeader>
 
-      <ScrollArea class="flex-1 px-6">
+      <div class="flex-1 overflow-y-auto px-6">
         <div class="space-y-6 pb-6">
           <!-- Photo -->
           <div
@@ -243,7 +243,7 @@ watch(
             <p class="text-sm whitespace-pre-wrap">{{ item.notes || 'No notes provided.' }}</p>
           </div>
         </div>
-      </ScrollArea>
+      </div>
     </SheetContent>
   </Sheet>
 </template>

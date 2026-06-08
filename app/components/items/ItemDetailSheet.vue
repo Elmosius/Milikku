@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { Edit, Folder, Trash2, Star } from 'lucide-vue-next';
+import { Edit, Folder, Star, Trash2 } from 'lucide-vue-next';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
-import { ScrollArea } from '~/components/ui/scroll-area';
 import { Separator } from '~/components/ui/separator';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '~/components/ui/sheet';
 import { iconMap } from '~/constants/icons';
@@ -48,7 +47,11 @@ watch(
               variant="ghost"
               size="icon"
               @click="emit('toggleFavorite', item)"
-              :class="item.isFavorite ? 'text-yellow-500 hover:text-yellow-600' : 'text-muted-foreground hover:text-yellow-500'"
+              :class="
+                item.isFavorite
+                  ? 'text-yellow-500 hover:text-yellow-600'
+                  : 'text-muted-foreground hover:text-yellow-500'
+              "
               :title="item.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'"
             >
               <Star :class="{ 'fill-current': item.isFavorite }" class="h-4 w-4" />
@@ -173,7 +176,7 @@ watch(
               >
                 <div class="flex items-center space-x-3">
                   <div
-                    class="bg-background rounded-full p-2 shadow-sm"
+                    class="bg-background rounded-full p-2"
                     :style="
                       getCategory(item.categoryId)?.color
                         ? { color: getCategory(item.categoryId)?.color as string }
@@ -196,9 +199,7 @@ watch(
 
               <div v-if="getLocation(item.locationId)" class="bg-muted/30 rounded-lg border p-4">
                 <div class="flex items-start space-x-3">
-                  <div
-                    class="bg-background text-muted-foreground shrink-0 rounded-full p-2 shadow-sm"
-                  >
+                  <div class="bg-background text-muted-foreground shrink-0 rounded-full p-2">
                     <component
                       :is="
                         locationIconMap[getLocation(item.locationId)?.icon || 'Folder'] || Folder

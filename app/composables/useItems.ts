@@ -80,16 +80,19 @@ export function useItems() {
   const formOpen = ref(false);
   const formMode = ref<'create' | 'edit'>('create');
   const selectedItemToEdit = ref<Item | null>(null);
+  const initialCreateData = ref<Partial<ItemFormValues> | null>(null);
 
-  const openCreateForm = () => {
+  const openCreateForm = (initialData?: Partial<ItemFormValues>) => {
     formMode.value = 'create';
     selectedItemToEdit.value = null;
+    initialCreateData.value = initialData || null;
     formOpen.value = true;
   };
 
   const openEditForm = (item: Item) => {
     formMode.value = 'edit';
     selectedItemToEdit.value = item;
+    initialCreateData.value = null;
     formOpen.value = true;
   };
 
@@ -225,6 +228,7 @@ export function useItems() {
     formOpen,
     formMode,
     selectedItemToEdit,
+    initialCreateData,
     openCreateForm,
     openEditForm,
     handleSubmit,

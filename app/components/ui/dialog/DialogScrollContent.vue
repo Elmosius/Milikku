@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { DialogContentEmits, DialogContentProps } from 'reka-ui';
-import type { HTMLAttributes } from 'vue';
+import { cn } from '@/lib/utils';
 import { Cross2Icon } from '@radix-icons/vue';
 import { reactiveOmit } from '@vueuse/core';
+import type { DialogContentEmits, DialogContentProps } from 'reka-ui';
 import {
   DialogClose,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   DialogPortal,
   useForwardPropsEmits,
 } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import type { HTMLAttributes } from 'vue';
 
 defineOptions({
   inheritAttrs: false,
@@ -32,7 +32,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
       <DialogContent
         :class="
           cn(
-            'border-border bg-background relative z-50 my-8 grid w-full max-w-lg gap-4 border p-6 shadow-lg duration-200 sm:rounded-lg md:w-full',
+            'border-border bg-background relative z-50 my-8 grid w-full max-w-lg gap-4 border p-6 duration-200 sm:rounded-lg md:w-full',
             props.class,
           )
         "

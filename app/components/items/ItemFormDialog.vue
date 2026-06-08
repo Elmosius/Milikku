@@ -28,6 +28,7 @@ const props = defineProps<{
   open: boolean;
   mode: 'create' | 'edit';
   item: Item | null;
+  initialData?: Partial<ItemFormValues> | null;
 }>();
 
 const emit = defineEmits<{
@@ -57,8 +58,8 @@ const { categories } = useCategories();
 const { locations } = useLocations();
 
 watch(
-  () => props.open,
-  (isOpen) => {
+  () => [props.open, props.initialData],
+  ([isOpen]) => {
     if (isOpen) {
       selectedPhotoFile.value = null;
       if (previewUrl.value && previewUrl.value.startsWith('blob:')) {
@@ -71,21 +72,39 @@ watch(
           name: props.item.name,
           categoryId: props.item.categoryId || undefined,
           locationId: props.item.locationId || undefined,
-          brand: props.item.brand,
-          model: props.item.model,
-          serialNumber: props.item.serialNumber,
+          brand: props.item.brand || '',
+          model: props.item.model || '',
+          serialNumber: props.item.serialNumber || '',
           purchaseDate: props.item.purchaseDate,
           purchasePrice:
             props.item.purchasePrice == null || props.item.purchasePrice === ''
               ? undefined
               : Number(props.item.purchasePrice),
-          purchaseLocation: props.item.purchaseLocation,
+          purchaseLocation: props.item.purchaseLocation || '',
           warrantyExpiry: props.item.warrantyExpiry,
           condition: props.item.condition,
           status: props.item.status,
-          notes: props.item.notes,
+          notes: props.item.notes || '',
           quantity: props.item.quantity,
           isFavorite: props.item.isFavorite,
+        });
+      } else if (props.mode === 'create' && props.initialData) {
+        setValues({
+          name: props.initialData.name || '',
+          categoryId: props.initialData.categoryId || undefined,
+          locationId: props.initialData.locationId || undefined,
+          brand: props.initialData.brand || '',
+          model: props.initialData.model || '',
+          serialNumber: props.initialData.serialNumber || '',
+          purchaseDate: props.initialData.purchaseDate || undefined,
+          purchasePrice: props.initialData.purchasePrice || undefined,
+          purchaseLocation: props.initialData.purchaseLocation || '',
+          warrantyExpiry: props.initialData.warrantyExpiry || undefined,
+          condition: props.initialData.condition || undefined,
+          status: props.initialData.status || undefined,
+          notes: props.initialData.notes || '',
+          quantity: props.initialData.quantity || 1,
+          isFavorite: props.initialData.isFavorite || false,
         });
       } else {
         resetForm();

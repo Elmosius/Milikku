@@ -6,6 +6,7 @@ import ItemsTable from '~/components/items/ItemsTable.vue';
 import ItemDetailSheet from '~/components/items/ItemDetailSheet.vue';
 import ItemFormDialog from '~/components/items/ItemFormDialog.vue';
 import DeleteItemDialog from '~/components/items/DeleteItemDialog.vue';
+import AIItemFAB from '~/components/items/AIItemFAB.vue';
 
 const {
   items,
@@ -15,6 +16,7 @@ const {
   formOpen,
   formMode,
   selectedItemToEdit,
+  initialCreateData,
   openCreateForm,
   openEditForm,
   handleSubmit,
@@ -36,7 +38,7 @@ const {
 
 <template>
   <div class="flex flex-1 flex-col gap-4">
-    <ItemsHeader @create="openCreateForm" />
+    <ItemsHeader @create="() => openCreateForm()" />
 
     <ItemsFilterBar :query-params="queryParams" />
 
@@ -54,10 +56,13 @@ const {
       @change-limit="queryParams.limit = $event"
     />
 
+    <AIItemFAB @parsed="openCreateForm" />
+
     <ItemFormDialog
       v-model:open="formOpen"
       :mode="formMode"
       :item="selectedItemToEdit"
+      :initial-data="initialCreateData"
       @submit="handleSubmit"
     />
 

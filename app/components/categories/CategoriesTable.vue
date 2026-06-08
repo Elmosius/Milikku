@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { Folder, Pencil, Trash2 } from 'lucide-vue-next';
-import type { Category } from '~/types/category';
-import { iconMap } from '~/constants/icons';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import {
@@ -12,6 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
+import { iconMap } from '~/constants/icons';
+import type { Category } from '~/types/category';
 
 defineProps<{
   categories: Category[];
@@ -81,7 +81,9 @@ defineEmits<{
               <span v-else class="text-muted-foreground">-</span>
             </TableCell>
             <TableCell>
-              <span class="inline-flex items-center justify-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+              <span
+                class="bg-primary/10 text-primary inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+              >
                 {{ category.itemCount || 0 }}
               </span>
             </TableCell>

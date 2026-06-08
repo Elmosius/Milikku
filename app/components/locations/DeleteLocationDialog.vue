@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Location } from '~/types/location';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
+import type { Location } from '~/types/location';
 
 defineProps<{
   open: boolean;

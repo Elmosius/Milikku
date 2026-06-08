@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onUnmounted, ref, watch } from 'vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
+import { onUnmounted, ref, watch } from 'vue';
 import { Button } from '~/components/ui/button';
 import { Checkbox } from '~/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
@@ -65,7 +65,7 @@ watch(
         URL.revokeObjectURL(previewUrl.value);
       }
       previewUrl.value = props.mode === 'edit' && props.item?.photoUrl ? props.item.photoUrl : null;
-      
+
       if (props.mode === 'edit' && props.item) {
         setValues({
           name: props.item.name,
@@ -267,12 +267,16 @@ const handleFileChange = (e: Event, handleChange: (val: any) => void) => {
               <FormField v-slot="{ handleChange }" name="photoUrl">
                 <FormItem class="relative col-span-1 pb-4 md:col-span-2">
                   <FormLabel>Photo Item</FormLabel>
-                  <div class="flex items-center gap-4 mt-2">
+                  <div class="mt-2 flex items-center gap-4">
                     <div
                       v-if="previewUrl"
-                      class="h-16 w-16 overflow-hidden rounded-md border border-border shrink-0 bg-muted"
+                      class="border-border bg-muted h-16 w-16 shrink-0 overflow-hidden rounded-md border"
                     >
-                      <img :src="previewUrl" alt="Item Preview" class="h-full w-full object-cover" />
+                      <img
+                        :src="previewUrl"
+                        alt="Item Preview"
+                        class="h-full w-full object-cover"
+                      />
                     </div>
                     <FormControl>
                       <Input

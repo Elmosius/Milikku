@@ -1,4 +1,5 @@
 import { boolean, integer, numeric, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 // Example profile table mapped to Supabase's auth.users table
 export const profiles = pgTable('profiles', {
@@ -58,3 +59,18 @@ export const items = pgTable('items', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
+
+export const itemsRelations = relations(items, ({ one }) => ({
+  category: one(categories, {
+    fields: [items.categoryId],
+    references: [categories.id],
+  }),
+  location: one(locations, {
+    fields: [items.locationId],
+    references: [locations.id],
+  }),
+  profile: one(profiles, {
+    fields: [items.userId],
+    references: [profiles.id],
+  }),
+}));

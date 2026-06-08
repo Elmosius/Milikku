@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '~/components/ui/sheet';
+import { Edit, Folder, Trash2 } from 'lucide-vue-next';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { ScrollArea } from '~/components/ui/scroll-area';
 import { Separator } from '~/components/ui/separator';
-import { Edit, Trash2, Folder } from 'lucide-vue-next';
-import type { Item } from '~/types/item';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '~/components/ui/sheet';
+import { iconMap } from '~/constants/icons';
+import { locationIconMap } from '~/constants/locationIcons';
 import type { Category } from '~/types/category';
+import type { Item } from '~/types/item';
 import type { Location } from '~/types/location';
 import { formatCurrency } from '~/utils/currency';
 import { formatDate } from '~/utils/date';
-import { iconMap } from '~/constants/icons';
-import { locationIconMap } from '~/constants/locationIcons';
 
 const props = defineProps<{
   open: boolean;
@@ -60,13 +60,28 @@ watch(
           <Badge
             v-if="getCategory(item.categoryId)"
             variant="outline"
-            :style="getCategory(item.categoryId)?.color ? { borderColor: getCategory(item.categoryId)?.color as string, color: getCategory(item.categoryId)?.color as string } : {}"
+            :style="
+              getCategory(item.categoryId)?.color
+                ? {
+                    borderColor: getCategory(item.categoryId)?.color as string,
+                    color: getCategory(item.categoryId)?.color as string,
+                  }
+                : {}
+            "
           >
-            <component :is="iconMap[getCategory(item.categoryId)?.icon || 'Folder'] || Folder" class="mr-1.5 h-3 w-3" stroke-width="2" />
+            <component
+              :is="iconMap[getCategory(item.categoryId)?.icon || 'Folder'] || Folder"
+              class="mr-1.5 h-3 w-3"
+              stroke-width="2"
+            />
             {{ getCategory(item.categoryId)?.name }}
           </Badge>
           <Badge v-if="getLocation(item.locationId)" variant="outline">
-            <component :is="locationIconMap[getLocation(item.locationId)?.icon || 'Folder'] || Folder" class="mr-1.5 h-3 w-3" stroke-width="2" />
+            <component
+              :is="locationIconMap[getLocation(item.locationId)?.icon || 'Folder'] || Folder"
+              class="mr-1.5 h-3 w-3"
+              stroke-width="2"
+            />
             {{ getLocation(item.locationId)?.name }}
           </Badge>
           <Badge v-if="item.status">{{ item.status }}</Badge>
@@ -126,7 +141,10 @@ watch(
           <Separator />
 
           <!-- Categorization & Placement -->
-          <div class="space-y-4" v-if="getCategory(item.categoryId) || getLocation(item.locationId)">
+          <div
+            class="space-y-4"
+            v-if="getCategory(item.categoryId) || getLocation(item.locationId)"
+          >
             <h3 class="text-muted-foreground text-sm font-semibold tracking-wider uppercase">
               Categorization & Placement
             </h3>
@@ -134,27 +152,55 @@ watch(
               <div
                 v-if="getCategory(item.categoryId)"
                 class="rounded-lg border p-4"
-                :style="getCategory(item.categoryId)?.color ? { borderColor: getCategory(item.categoryId)?.color as string, backgroundColor: `${getCategory(item.categoryId)?.color}10` } : {}"
+                :style="
+                  getCategory(item.categoryId)?.color
+                    ? {
+                        borderColor: getCategory(item.categoryId)?.color as string,
+                        backgroundColor: `${getCategory(item.categoryId)?.color}10`,
+                      }
+                    : {}
+                "
               >
                 <div class="flex items-center space-x-3">
-                  <div class="bg-background rounded-full p-2 shadow-sm" :style="getCategory(item.categoryId)?.color ? { color: getCategory(item.categoryId)?.color as string } : { color: 'var(--muted-foreground)' }">
-                    <component :is="iconMap[getCategory(item.categoryId)?.icon || 'Folder'] || Folder" class="h-5 w-5" />
+                  <div
+                    class="bg-background rounded-full p-2 shadow-sm"
+                    :style="
+                      getCategory(item.categoryId)?.color
+                        ? { color: getCategory(item.categoryId)?.color as string }
+                        : { color: 'var(--muted-foreground)' }
+                    "
+                  >
+                    <component
+                      :is="iconMap[getCategory(item.categoryId)?.icon || 'Folder'] || Folder"
+                      class="h-5 w-5"
+                    />
                   </div>
                   <div>
                     <div class="text-sm font-medium">Category</div>
-                    <div class="text-muted-foreground text-sm">{{ getCategory(item.categoryId)?.name }}</div>
+                    <div class="text-muted-foreground text-sm">
+                      {{ getCategory(item.categoryId)?.name }}
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div v-if="getLocation(item.locationId)" class="bg-muted/30 rounded-lg border p-4">
                 <div class="flex items-start space-x-3">
-                  <div class="bg-background text-muted-foreground rounded-full p-2 shadow-sm shrink-0">
-                    <component :is="locationIconMap[getLocation(item.locationId)?.icon || 'Folder'] || Folder" class="h-5 w-5" />
+                  <div
+                    class="bg-background text-muted-foreground shrink-0 rounded-full p-2 shadow-sm"
+                  >
+                    <component
+                      :is="
+                        locationIconMap[getLocation(item.locationId)?.icon || 'Folder'] || Folder
+                      "
+                      class="h-5 w-5"
+                    />
                   </div>
                   <div>
                     <div class="text-sm font-medium">{{ getLocation(item.locationId)?.name }}</div>
-                    <div class="text-muted-foreground mt-1 text-xs">{{ getLocation(item.locationId)?.description || 'No description provided.' }}</div>
+                    <div class="text-muted-foreground mt-1 text-xs">
+                      {{ getLocation(item.locationId)?.description || 'No description provided.' }}
+                    </div>
                   </div>
                 </div>
               </div>

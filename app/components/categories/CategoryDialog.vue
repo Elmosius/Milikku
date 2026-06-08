@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { watch } from 'vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
-import { categorySchema } from '~/validations/category';
-import type { CategorySchema } from '~/validations/category';
+import { watch } from 'vue';
 import { toast } from 'vue-sonner';
+import { Button } from '~/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -15,8 +14,9 @@ import {
 } from '~/components/ui/dialog';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { Button } from '~/components/ui/button';
 import { availableIcons } from '~/constants/icons';
+import type { CategorySchema } from '~/validations/category';
+import { categorySchema } from '~/validations/category';
 const props = defineProps<{
   open: boolean;
   mode: 'create' | 'edit';

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useAuth } from '@/composables/useAuth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -12,12 +11,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { ChevronsUpDown, LogOut, Settings } from 'lucide-vue-next';
+import { useAuth } from '@/composables/useAuth';
 import { useProfile } from '@/composables/useProfile';
+import { ChevronsUpDown, LogOut, Settings } from 'lucide-vue-next';
 
 const { user, signOut } = useAuth();
 const { profile } = useProfile();
@@ -34,15 +34,13 @@ const { isMobile } = useSidebar();
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg">
-              <AvatarImage :src="profile?.avatarUrl" :alt="user?.email" />
+              <AvatarImage :src="profile?.avatarUrl || ''" :alt="user?.email" />
               <AvatarFallback class="rounded-lg">
                 {{ user?.email?.charAt(0).toUpperCase() || 'U' }}
               </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-semibold">{{
-                profile?.fullName || 'User'
-              }}</span>
+              <span class="truncate font-semibold">{{ profile?.fullName || 'User' }}</span>
               <span class="truncate text-xs">{{ user?.email }}</span>
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
@@ -57,15 +55,13 @@ const { isMobile } = useSidebar();
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="profile?.avatarUrl" :alt="user?.email" />
+                <AvatarImage :src="profile?.avatarUrl || ''" :alt="user?.email" />
                 <AvatarFallback class="rounded-lg">
                   {{ user?.email?.charAt(0).toUpperCase() || 'U' }}
                 </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-semibold">{{
-                  profile?.fullName || 'User'
-                }}</span>
+                <span class="truncate font-semibold">{{ profile?.fullName || 'User' }}</span>
                 <span class="truncate text-xs">{{ user?.email }}</span>
               </div>
             </div>

@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { watch } from 'vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
-import { locationSchema } from '~/validations/location';
-import type { LocationSchema } from '~/validations/location';
+import { watch } from 'vue';
 import { toast } from 'vue-sonner';
+import { Button } from '~/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -15,8 +14,9 @@ import {
 } from '~/components/ui/dialog';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { Button } from '~/components/ui/button';
 import { locationIcons as availableIcons } from '~/constants/locationIcons';
+import type { LocationSchema } from '~/validations/location';
+import { locationSchema } from '~/validations/location';
 
 const props = defineProps<{
   open: boolean;
@@ -91,7 +91,7 @@ const onSubmit = handleSubmit(async (values: LocationSchema) => {
 
 <template>
   <Dialog :open="open" @update:open="$emit('update:open', $event)">
-    <DialogContent class="sm:max-w-[425px]">
+    <DialogContent class="sm:max-w-106.25">
       <DialogHeader>
         <DialogTitle>{{ mode === 'edit' ? 'Edit Location' : 'Add Location' }}</DialogTitle>
         <DialogDescription>
@@ -121,7 +121,7 @@ const onSubmit = handleSubmit(async (values: LocationSchema) => {
               <textarea
                 v-bind="componentField"
                 placeholder="Optional description"
-                class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-20 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               ></textarea>
             </FormControl>
             <FormMessage />

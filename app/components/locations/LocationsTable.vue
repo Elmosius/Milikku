@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { Folder, Pencil, Trash2 } from 'lucide-vue-next';
-import type { Location } from '~/types/location';
-import { locationIconMap as iconMap } from '~/constants/locationIcons';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import {
@@ -12,6 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
+import { locationIconMap as iconMap } from '~/constants/locationIcons';
+import type { Location } from '~/types/location';
 
 defineProps<{
   locations: Location[];
@@ -76,7 +76,9 @@ defineEmits<{
               {{ location.description || '-' }}
             </TableCell>
             <TableCell>
-              <span class="inline-flex items-center justify-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+              <span
+                class="bg-primary/10 text-primary inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+              >
                 {{ location.itemCount || 0 }}
               </span>
             </TableCell>

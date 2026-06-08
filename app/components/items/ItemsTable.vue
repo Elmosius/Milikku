@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { Edit, Eye, Folder, Trash2 } from 'lucide-vue-next';
+import { Badge } from '~/components/ui/badge';
+import { Button } from '~/components/ui/button';
+import { Skeleton } from '~/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -7,17 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
-import { Skeleton } from '~/components/ui/skeleton';
-import { Button } from '~/components/ui/button';
-import { Badge } from '~/components/ui/badge';
-import { Eye, Edit, Trash2, Folder } from 'lucide-vue-next';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
-import type { Item } from '~/types/item';
-import type { Category } from '~/types/category';
-import type { Location } from '~/types/location';
-import { SKELETON_ROW_COUNT } from '~/constants/item';
 import { iconMap } from '~/constants/icons';
+import { SKELETON_ROW_COUNT } from '~/constants/item';
 import { locationIconMap } from '~/constants/locationIcons';
+import type { Category } from '~/types/category';
+import type { Item } from '~/types/item';
+import type { Location } from '~/types/location';
 
 defineProps<{
   items: Item[];
@@ -97,7 +97,9 @@ defineEmits<{
                 <TooltipProvider v-if="getLocation(item.locationId)?.description">
                   <Tooltip>
                     <TooltipTrigger>
-                      <span class="cursor-help border-b border-dashed border-muted-foreground/50">{{ getLocation(item.locationId)?.name }}</span>
+                      <span class="border-muted-foreground/50 cursor-help border-b border-dashed">{{
+                        getLocation(item.locationId)?.name
+                      }}</span>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p class="max-w-xs">{{ getLocation(item.locationId)?.description }}</p>

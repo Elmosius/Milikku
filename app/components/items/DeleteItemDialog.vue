@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Item } from '~/types/item';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
+import type { Item } from '~/types/item';
 
 defineProps<{
   open: boolean;

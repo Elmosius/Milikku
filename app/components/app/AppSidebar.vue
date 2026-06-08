@@ -13,9 +13,9 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
-import NavUser from './NavUser.vue';
-import { Home, Package, Tags, MapPin } from 'lucide-vue-next';
+import { Home, MapPin, Package, Tags } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
+import NavUser from './NavUser.vue';
 
 const route = useRoute();
 const { setOpenMobile } = useSidebar();

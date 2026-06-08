@@ -69,7 +69,7 @@ const breadcrumbItems = computed(() => {
 
         <!-- Quick access user avatar -->
         <Avatar class="h-8 w-8 rounded-full border">
-          <AvatarImage :src="profile?.avatarUrl" :alt="user?.email" />
+          <AvatarImage :src="profile?.avatarUrl || ''" :alt="user?.email" />
           <AvatarFallback class="bg-primary/10 text-primary rounded-full text-xs font-semibold">
             {{ user?.email?.charAt(0).toUpperCase() || 'U' }}
           </AvatarFallback>

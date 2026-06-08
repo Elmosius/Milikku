@@ -145,6 +145,10 @@ EXTRACTION RULES:
 
     return parsedData;
   } catch (error: any) {
+    // Re-throw errors we intentionally created (e.g. 400 prompt injection refusal)
+    // so the friendly message reaches the frontend without being replaced.
+    if (error.statusCode) throw error;
+
     console.error('AI parse error:', error.message || error);
     throw createError({
       statusCode: 500,

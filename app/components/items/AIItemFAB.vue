@@ -8,9 +8,8 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '~/compone
 import { Textarea } from '~/components/ui/textarea';
 import type { ItemFormValues } from '~/validations/item';
 
-const emit = defineEmits<{
-  parsed: [data: Partial<ItemFormValues>];
-}>();
+const aimoState = useAimoState();
+const route = useRoute();
 
 const open = ref(false);
 const promptText = ref('');
@@ -36,10 +35,14 @@ const handleParse = async () => {
     open.value = false;
     promptText.value = '';
 
-    // Slight delay to allow dialog closing animation
-    setTimeout(() => {
-      emit('parsed', data);
-    }, 150);
+    // Store parsed data in global state
+    aimoState.value = data;
+
+    // If already on /items page, the watcher in items.vue will handle it.
+    // Otherwise, navigate to /items — the page will auto-open the form.
+    if (route.path !== '/items') {
+      await navigateTo('/items');
+    }
   } catch (error: any) {
     toast.error(error.data?.statusMessage || error.message || 'Failed to parse text with AI');
   } finally {

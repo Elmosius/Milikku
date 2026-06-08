@@ -2,6 +2,7 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import AppSidebar from '@/components/app/AppSidebar.vue';
+import AIItemFAB from '@/components/items/AIItemFAB.vue';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -79,5 +80,7 @@ const breadcrumbItems = computed(() => {
         <slot />
       </main>
     </SidebarInset>
+    <!-- Aimo AI FAB — globally accessible on all pages -->
+    <AIItemFAB />
   </SidebarProvider>
 </template>

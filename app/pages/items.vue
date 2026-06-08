@@ -6,7 +6,6 @@ import ItemsTable from '~/components/items/ItemsTable.vue';
 import ItemDetailSheet from '~/components/items/ItemDetailSheet.vue';
 import ItemFormDialog from '~/components/items/ItemFormDialog.vue';
 import DeleteItemDialog from '~/components/items/DeleteItemDialog.vue';
-import AIItemFAB from '~/components/items/AIItemFAB.vue';
 
 const {
   items,
@@ -34,6 +33,23 @@ const {
   getCategory,
   getLocation,
 } = useItems();
+
+// Watch for Aimo global state — auto-open create form when Aimo parses data
+const aimoState = useAimoState();
+
+const processAimoData = () => {
+  if (aimoState.value) {
+    const data = aimoState.value;
+    aimoState.value = null; // Clear state so form doesn't re-open
+    // Small delay to let the page render first
+    setTimeout(() => {
+      openCreateForm(data);
+    }, 100);
+  }
+};
+
+onMounted(processAimoData);
+watch(aimoState, processAimoData);
 </script>
 
 <template>
@@ -55,8 +71,6 @@ const {
       @change-page="queryParams.page = $event"
       @change-limit="queryParams.limit = $event"
     />
-
-    <AIItemFAB @parsed="openCreateForm" />
 
     <ItemFormDialog
       v-model:open="formOpen"

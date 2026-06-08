@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Ensure profile exists to satisfy foreign key constraints
     const existingProfile = await db.query.profiles.findFirst({
       where: eq(profiles.id, userId),
     });

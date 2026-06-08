@@ -11,12 +11,10 @@ export function useCategories() {
     default: () => [],
   });
 
-  // Dialog state
   const dialogOpen = ref(false);
   const dialogMode = ref<'create' | 'edit'>('create');
   const selectedCategory = ref<Category | null>(null);
 
-  // Delete state
   const deleteAlertOpen = ref(false);
   const categoryToDelete = ref<Category | null>(null);
   const isDeleting = ref(false);

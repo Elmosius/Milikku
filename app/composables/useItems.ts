@@ -5,7 +5,6 @@ import type { Location } from '~/types/location';
 import type { ItemFormValues } from '~/validations/item';
 
 export function useItems() {
-  // --- Filters state ---
   const queryParams = reactive({
     search: '',
     categoryId: 'all',
@@ -18,8 +17,6 @@ export function useItems() {
     limit: 10,
   });
 
-  // --- Data fetching ---
-  // Each query param must be an individual computed/ref for Nuxt to track changes
   interface PaginatedResponse {
     items: Item[];
     pagination: {
@@ -60,7 +57,6 @@ export function useItems() {
   const items = computed(() => paginatedData.value?.items ?? []);
   const pagination = computed(() => paginatedData.value?.pagination);
 
-  // Reset page to 1 when filters change
   watch(
     () => [
       queryParams.search,
@@ -76,7 +72,6 @@ export function useItems() {
     }
   );
 
-  // --- Form state ---
   const formOpen = ref(false);
   const formMode = ref<'create' | 'edit'>('create');
   const selectedItemToEdit = ref<Item | null>(null);
@@ -116,7 +111,6 @@ export function useItems() {
         toast.success('Item created successfully');
       }
 
-      // Upload photo if a file was selected
       if (photoFile && savedItem?.id) {
         const formData = new FormData();
         formData.append('photo', photoFile);
@@ -135,7 +129,6 @@ export function useItems() {
     }
   };
 
-  // --- Detail sheet state ---
   const sheetOpen = ref(false);
   const selectedItemToView = ref<Item | null>(null);
 
@@ -154,7 +147,6 @@ export function useItems() {
     confirmDelete(item);
   };
 
-  // --- Delete state ---
   const deleteAlertOpen = ref(false);
   const itemToDelete = ref<Item | null>(null);
   const isDeleting = ref(false);
@@ -181,11 +173,8 @@ export function useItems() {
     }
   };
 
-  // --- Favorite toggle ---
   const toggleFavorite = async (item: Item) => {
     const originalFavorite = item.isFavorite;
-    
-    // Optimistic UI update
     item.isFavorite = !originalFavorite;
     
     try {
@@ -196,13 +185,11 @@ export function useItems() {
       toast.success(item.isFavorite ? 'Marked as favorite' : 'Removed from favorites');
       await refresh();
     } catch  {
-      // Revert on failure
       item.isFavorite = originalFavorite;
       toast.error('Failed to update favorite status');
     }
   };
 
-  // --- Lookup helpers ---
   const { categories } = useCategories();
   const { locations } = useLocations();
 
@@ -217,14 +204,12 @@ export function useItems() {
   };
 
   return {
-    // Data
     items,
     pagination,
     pending,
     refresh,
     queryParams,
 
-    // Form
     formOpen,
     formMode,
     selectedItemToEdit,
@@ -233,24 +218,20 @@ export function useItems() {
     openEditForm,
     handleSubmit,
 
-    // Detail sheet
     sheetOpen,
     selectedItemToView,
     openDetailSheet,
     editFromSheet,
     deleteFromSheet,
 
-    // Delete
     deleteAlertOpen,
     itemToDelete,
     isDeleting,
     confirmDelete,
     handleDelete,
 
-    // Favorite
     toggleFavorite,
 
-    // Lookup helpers
     getCategory,
     getLocation,
   };

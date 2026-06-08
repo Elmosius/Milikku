@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Item ID is required' });
   }
 
-  // Verify item ownership
   const existingItem = await db.query.items.findFirst({
     where: and(eq(items.id, id), eq(items.userId, userId)),
   });
@@ -19,7 +18,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Item not found' });
   }
 
-  // Read multipart form data
   const parts = await readMultipartFormData(event);
   if (!parts) {
     throw createError({ statusCode: 400, statusMessage: 'No multipart data found' });
@@ -30,13 +28,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Photo file is required' });
   }
 
-  // Validate file type
   const mimeType = filePart.type || 'image/jpeg';
   if (!mimeType.startsWith('image/')) {
     throw createError({ statusCode: 400, statusMessage: 'File must be an image' });
   }
 
-  // Validate file size (max 5MB)
   if (filePart.data.length > 5 * 1024 * 1024) {
     throw createError({ statusCode: 400, statusMessage: 'File size must be less than 5MB' });
   }
@@ -44,7 +40,6 @@ export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient(event);
 
   try {
-    // Delete old photo if exists
     if (existingItem.photoUrl) {
       const url = new URL(existingItem.photoUrl);
       const pathParts = url.pathname.split('/item-photos/');
@@ -53,11 +48,9 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Generate unique filename: userId/itemId-timestamp.ext
     const ext = filePart.filename.split('.').pop() || 'jpg';
     const fileName = `${userId}/${id}-${Date.now()}.${ext}`;
 
-    // Upload to Supabase Storage
     const { error: uploadError } = await supabase.storage
       .from('item-photos')
       .upload(fileName, filePart.data, {
@@ -70,12 +63,10 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 500, statusMessage: 'Failed to upload photo. Please try again later.' });
     }
 
-    // Get public URL
     const {
       data: { publicUrl },
     } = supabase.storage.from('item-photos').getPublicUrl(fileName);
 
-    // Update item's photoUrl in database
     const [updatedItem] = await db
       .update(items)
       .set({ photoUrl: publicUrl, updatedAt: new Date() })

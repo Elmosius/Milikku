@@ -45,10 +45,9 @@ const { locations } = useLocations();
       <div class="flex shrink-0 items-center space-x-2">
         <Switch
           id="favorite-filter"
-          :checked="queryParams.isFavorite"
-          @update:checked="queryParams.isFavorite = $event"
+          v-model="queryParams.isFavorite"
         />
-        <Label for="favorite-filter" class="cursor-pointer">Favorites Only</Label>
+        <Label for="favorite-filter" class="cursor-pointer select-none">Favorites Only</Label>
       </div>
     </div>
 

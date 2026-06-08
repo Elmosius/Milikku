@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Edit, Eye, Folder, Trash2 } from 'lucide-vue-next';
+import { Edit, Eye, Folder, Trash2, Star } from 'lucide-vue-next';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
@@ -30,6 +30,7 @@ defineEmits<{
   view: [item: Item];
   edit: [item: Item];
   delete: [item: Item];
+  toggleFavorite: [item: Item];
 }>();
 </script>
 
@@ -68,7 +69,19 @@ defineEmits<{
 
         <template v-else>
           <TableRow v-for="item in items" :key="item.id">
-            <TableCell class="font-medium">{{ item.name }}</TableCell>
+            <TableCell class="font-medium">
+              <div class="flex items-center gap-2">
+                <button
+                  @click.stop="$emit('toggleFavorite', item)"
+                  class="text-muted-foreground hover:text-yellow-500 focus:outline-none transition-colors"
+                  :class="{ 'text-yellow-500': item.isFavorite }"
+                  title="Toggle Favorite"
+                >
+                  <Star :class="{ 'fill-current': item.isFavorite }" class="h-4 w-4" />
+                </button>
+                <span>{{ item.name }}</span>
+              </div>
+            </TableCell>
             <TableCell>
               <div v-if="getCategory(item.categoryId)" class="flex items-center space-x-2">
                 <component

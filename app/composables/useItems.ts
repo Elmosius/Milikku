@@ -17,12 +17,21 @@ export function useItems() {
   });
 
   // --- Data fetching ---
+  // Each query param must be an individual computed/ref for Nuxt to track changes
   const {
     data: items,
     pending,
     refresh,
   } = useFetch<Item[]>('/api/items', {
-    query: queryParams,
+    query: {
+      search: computed(() => queryParams.search || undefined),
+      categoryId: computed(() => queryParams.categoryId !== 'all' ? queryParams.categoryId : undefined),
+      locationId: computed(() => queryParams.locationId !== 'all' ? queryParams.locationId : undefined),
+      condition: computed(() => queryParams.condition !== 'all' ? queryParams.condition : undefined),
+      status: computed(() => queryParams.status !== 'all' ? queryParams.status : undefined),
+      isFavorite: computed(() => queryParams.isFavorite ? 'true' : undefined),
+      sortBy: computed(() => queryParams.sortBy),
+    },
     default: () => [],
   });
 
@@ -128,6 +137,27 @@ export function useItems() {
     }
   };
 
+  // --- Favorite toggle ---
+  const toggleFavorite = async (item: Item) => {
+    const originalFavorite = item.isFavorite;
+    
+    // Optimistic UI update
+    item.isFavorite = !originalFavorite;
+    
+    try {
+      await $fetch(`/api/items/${item.id}`, {
+        method: 'PUT',
+        body: { isFavorite: !originalFavorite }
+      });
+      toast.success(item.isFavorite ? 'Marked as favorite' : 'Removed from favorites');
+      await refresh();
+    } catch  {
+      // Revert on failure
+      item.isFavorite = originalFavorite;
+      toast.error('Failed to update favorite status');
+    }
+  };
+
   // --- Lookup helpers ---
   const { categories } = useCategories();
   const { locations } = useLocations();
@@ -170,6 +200,9 @@ export function useItems() {
     isDeleting,
     confirmDelete,
     handleDelete,
+
+    // Favorite
+    toggleFavorite,
 
     // Lookup helpers
     getCategory,

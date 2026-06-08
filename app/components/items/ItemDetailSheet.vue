@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Edit, Folder, Trash2 } from 'lucide-vue-next';
+import { Edit, Folder, Trash2, Star } from 'lucide-vue-next';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { ScrollArea } from '~/components/ui/scroll-area';
@@ -24,6 +24,7 @@ const emit = defineEmits<{
   'update:open': [val: boolean];
   edit: [item: Item];
   delete: [item: Item];
+  toggleFavorite: [item: Item];
 }>();
 
 const imageError = ref(false);
@@ -43,6 +44,15 @@ watch(
         <div class="flex items-center justify-between">
           <SheetTitle class="text-2xl font-bold">{{ item.name }}</SheetTitle>
           <div class="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              @click="emit('toggleFavorite', item)"
+              :class="item.isFavorite ? 'text-yellow-500 hover:text-yellow-600' : 'text-muted-foreground hover:text-yellow-500'"
+              :title="item.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'"
+            >
+              <Star :class="{ 'fill-current': item.isFavorite }" class="h-4 w-4" />
+            </Button>
             <Button variant="ghost" size="icon" @click="emit('edit', item)">
               <Edit class="h-4 w-4" />
             </Button>

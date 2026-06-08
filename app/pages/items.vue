@@ -27,6 +27,7 @@ const {
   isDeleting,
   confirmDelete,
   handleDelete,
+  toggleFavorite,
   getCategory,
   getLocation,
 } = useItems();
@@ -46,6 +47,7 @@ const {
       @view="openDetailSheet"
       @edit="openEditForm"
       @delete="confirmDelete"
+      @toggle-favorite="toggleFavorite"
     />
 
     <ItemFormDialog
@@ -62,6 +64,7 @@ const {
       :get-location="getLocation"
       @edit="editFromSheet"
       @delete="deleteFromSheet"
+      @toggle-favorite="toggleFavorite"
     />
 
     <DeleteItemDialog

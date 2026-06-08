@@ -4,4 +4,5 @@ export interface Location {
   description?: string | null;
   icon?: string | null;
   createdAt: string;
+  itemCount?: number;
 }

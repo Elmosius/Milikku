@@ -32,6 +32,7 @@ defineEmits<{
           <TableHead class="w-20">Icon</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Description</TableHead>
+          <TableHead>Total Items</TableHead>
           <TableHead>Created At</TableHead>
           <TableHead class="text-right">Actions</TableHead>
         </TableRow>
@@ -43,6 +44,7 @@ defineEmits<{
             <TableCell><Skeleton class="h-8 w-8 rounded-full" /></TableCell>
             <TableCell><Skeleton class="h-5 w-37.5" /></TableCell>
             <TableCell><Skeleton class="h-5 w-48" /></TableCell>
+            <TableCell><Skeleton class="h-5 w-8" /></TableCell>
             <TableCell><Skeleton class="h-5 w-25" /></TableCell>
             <TableCell class="text-right"><Skeleton class="inline-block h-8 w-25" /></TableCell>
           </TableRow>
@@ -51,7 +53,7 @@ defineEmits<{
         <!-- Empty State -->
         <template v-else-if="!locations || locations.length === 0">
           <TableRow>
-            <TableCell colspan="5" class="text-muted-foreground h-32 text-center">
+            <TableCell colspan="6" class="text-muted-foreground h-32 text-center">
               No locations found. Click "Add Location" to create one.
             </TableCell>
           </TableRow>
@@ -72,6 +74,11 @@ defineEmits<{
             <TableCell class="font-medium">{{ location.name }}</TableCell>
             <TableCell class="max-w-xs truncate" :title="location.description || ''">
               {{ location.description || '-' }}
+            </TableCell>
+            <TableCell>
+              <span class="inline-flex items-center justify-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                {{ location.itemCount || 0 }}
+              </span>
             </TableCell>
             <TableCell>{{
               location.createdAt ? new Date(location.createdAt).toLocaleDateString() : '-'

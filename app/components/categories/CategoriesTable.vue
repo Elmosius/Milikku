@@ -32,6 +32,7 @@ defineEmits<{
           <TableHead class="w-20">Icon</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Color</TableHead>
+          <TableHead>Total Items</TableHead>
           <TableHead>Created At</TableHead>
           <TableHead class="text-right">Actions</TableHead>
         </TableRow>
@@ -43,6 +44,7 @@ defineEmits<{
             <TableCell><Skeleton class="h-8 w-8 rounded-full" /></TableCell>
             <TableCell><Skeleton class="h-5 w-37.5" /></TableCell>
             <TableCell><Skeleton class="h-6 w-6 rounded-full" /></TableCell>
+            <TableCell><Skeleton class="h-5 w-8" /></TableCell>
             <TableCell><Skeleton class="h-5 w-25" /></TableCell>
             <TableCell class="text-right"><Skeleton class="inline-block h-8 w-25" /></TableCell>
           </TableRow>
@@ -51,7 +53,7 @@ defineEmits<{
         <!-- Empty State -->
         <template v-else-if="!categories || categories.length === 0">
           <TableRow>
-            <TableCell colspan="5" class="text-muted-foreground h-32 text-center">
+            <TableCell colspan="6" class="text-muted-foreground h-32 text-center">
               No categories found. Click "Add Category" to create one.
             </TableCell>
           </TableRow>
@@ -77,6 +79,11 @@ defineEmits<{
                 :style="{ backgroundColor: category.color }"
               ></div>
               <span v-else class="text-muted-foreground">-</span>
+            </TableCell>
+            <TableCell>
+              <span class="inline-flex items-center justify-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                {{ category.itemCount || 0 }}
+              </span>
             </TableCell>
             <TableCell>{{
               category.createdAt ? new Date(category.createdAt).toLocaleDateString() : '-'

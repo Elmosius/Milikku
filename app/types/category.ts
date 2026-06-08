@@ -4,4 +4,5 @@ export interface Category {
   icon?: string | null;
   color?: string | null;
   createdAt: string;
+  itemCount?: number;
 }

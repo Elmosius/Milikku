@@ -39,9 +39,10 @@ export default defineEventHandler(async (event) => {
 
     return newLocation;
   } catch (error: any) {
+    console.error('Create location error:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: error.message || 'Database error occurred',
+      statusMessage: 'Failed to process location data. Please try again.',
     });
   }
 });

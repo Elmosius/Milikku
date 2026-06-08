@@ -55,9 +55,10 @@ export default defineEventHandler(async (event) => {
 
     return newItem;
   } catch (error: any) {
+    console.error('Create item error:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: error.message || 'Database error occurred',
+      statusMessage: 'Failed to save item data. Please try again.',
     });
   }
 });

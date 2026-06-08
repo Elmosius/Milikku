@@ -39,9 +39,10 @@ export default defineEventHandler(async (event) => {
 
     return newCategory;
   } catch (error: any) {
+    console.error('Create category error:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: error.message || 'Database error occurred',
+      statusMessage: 'Failed to process category data. Please try again.',
     });
   }
 });

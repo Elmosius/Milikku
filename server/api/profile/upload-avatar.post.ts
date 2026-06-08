@@ -56,7 +56,8 @@ export default defineEventHandler(async (event) => {
       });
 
     if (uploadError) {
-      throw createError({ statusCode: 500, statusMessage: uploadError.message });
+      console.error('Supabase avatar upload error:', uploadError);
+      throw createError({ statusCode: 500, statusMessage: 'Failed to upload avatar. Please try again later.' });
     }
 
     const {
@@ -81,6 +82,7 @@ export default defineEventHandler(async (event) => {
     return { avatarUrl: updatedProfile.avatarUrl };
   } catch (error: any) {
     if (error.statusCode) throw error;
-    throw createError({ statusCode: 500, statusMessage: error.message || 'Upload failed' });
+    console.error('Avatar upload processing error:', error);
+    throw createError({ statusCode: 500, statusMessage: 'Failed to upload avatar. Please try again later.' });
   }
 });

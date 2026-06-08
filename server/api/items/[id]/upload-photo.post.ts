@@ -66,7 +66,8 @@ export default defineEventHandler(async (event) => {
       });
 
     if (uploadError) {
-      throw createError({ statusCode: 500, statusMessage: uploadError.message });
+      console.error('Supabase upload error:', uploadError);
+      throw createError({ statusCode: 500, statusMessage: 'Failed to upload photo. Please try again later.' });
     }
 
     // Get public URL
@@ -84,6 +85,7 @@ export default defineEventHandler(async (event) => {
     return { photoUrl: updatedItem.photoUrl };
   } catch (error: any) {
     if (error.statusCode) throw error;
-    throw createError({ statusCode: 500, statusMessage: error.message || 'Upload failed' });
+    console.error('Photo upload processing error:', error);
+    throw createError({ statusCode: 500, statusMessage: 'Failed to upload photo. Please try again later.' });
   }
 });

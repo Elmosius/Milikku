@@ -5,12 +5,24 @@ import type { Location } from '~/types/location';
 import type { ItemFormValues } from '~/validations/item';
 
 export function useItems() {
+  // --- Filters state ---
+  const queryParams = reactive({
+    search: '',
+    categoryId: 'all',
+    locationId: 'all',
+    condition: 'all',
+    status: 'all',
+    isFavorite: false,
+    sortBy: 'newest',
+  });
+
   // --- Data fetching ---
   const {
     data: items,
     pending,
     refresh,
   } = useFetch<Item[]>('/api/items', {
+    query: queryParams,
     default: () => [],
   });
 
@@ -135,6 +147,7 @@ export function useItems() {
     items,
     pending,
     refresh,
+    queryParams,
 
     // Form
     formOpen,

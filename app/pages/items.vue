@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useItems } from '~/composables/useItems';
 import ItemsHeader from '~/components/items/ItemsHeader.vue';
+import ItemsFilterBar from '~/components/items/ItemsFilterBar.vue';
 import ItemsTable from '~/components/items/ItemsTable.vue';
 import ItemDetailSheet from '~/components/items/ItemDetailSheet.vue';
 import ItemFormDialog from '~/components/items/ItemFormDialog.vue';
@@ -9,6 +10,7 @@ import DeleteItemDialog from '~/components/items/DeleteItemDialog.vue';
 const {
   items,
   pending,
+  queryParams,
   formOpen,
   formMode,
   selectedItemToEdit,
@@ -33,6 +35,8 @@ const {
 <template>
   <div class="flex flex-1 flex-col gap-4">
     <ItemsHeader @create="openCreateForm" />
+
+    <ItemsFilterBar :query-params="queryParams" />
 
     <ItemsTable
       :items="items"

@@ -1,8 +1,10 @@
 {
   "name": "Milikku",
+  "version": "1.0.0-beta",
   "type": "module",
   "private": true,
   "scripts": {
+    "release": "bumpp",
     "build": "nuxt build",
     "dev": "TMPDIR=/tmp nuxt dev",
     "generate": "nuxt generate",
@@ -53,6 +55,7 @@
   "devDependencies": {
     "@types/node": "^25.9.1",
     "@vite-pwa/nuxt": "^1.1.1",
+    "bumpp": "^11.1.0",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "oxlint": "^1.68.0",

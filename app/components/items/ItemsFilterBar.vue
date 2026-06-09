@@ -129,6 +129,8 @@ const { locations } = useLocations();
             <SelectItem value="oldest">Oldest First</SelectItem>
             <SelectItem value="name-asc">Name (A-Z)</SelectItem>
             <SelectItem value="name-desc">Name (Z-A)</SelectItem>
+            <SelectItem value="price-desc">Price (High → Low)</SelectItem>
+            <SelectItem value="price-asc">Price (Low → High)</SelectItem>
           </SelectContent>
         </Select>
       </div>

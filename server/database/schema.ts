@@ -60,7 +60,7 @@ export const items = pgTable('items', {
   updatedAt: timestamp('updated_at').defaultNow(),
 });
 
-export const itemsRelations = relations(items, ({ one }) => ({
+export const itemsRelations = relations(items, ({ one, many }) => ({
   category: one(categories, {
     fields: [items.categoryId],
     references: [categories.id],
@@ -71,6 +71,36 @@ export const itemsRelations = relations(items, ({ one }) => ({
   }),
   profile: one(profiles, {
     fields: [items.userId],
+    references: [profiles.id],
+  }),
+  lendings: many(lendings),
+}));
+
+export const lendings = pgTable('lendings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => profiles.id, { onDelete: 'cascade' }),
+  itemId: uuid('item_id')
+    .notNull()
+    .references(() => items.id, { onDelete: 'cascade' }),
+  borrowerName: text('borrower_name').notNull(),
+  borrowerContact: text('borrower_contact'),
+  lentAt: text('lent_at').notNull(),
+  expectedReturnAt: text('expected_return_at'),
+  returnedAt: text('returned_at'),
+  notes: text('notes'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const lendingsRelations = relations(lendings, ({ one }) => ({
+  item: one(items, {
+    fields: [lendings.itemId],
+    references: [items.id],
+  }),
+  profile: one(profiles, {
+    fields: [lendings.userId],
     references: [profiles.id],
   }),
 }));

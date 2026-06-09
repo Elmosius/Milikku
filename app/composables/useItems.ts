@@ -91,7 +91,7 @@ export function useItems() {
     formOpen.value = true;
   };
 
-  const handleSubmit = async (values: ItemFormValues, photoFile?: File | null) => {
+  const handleSubmit = async (values: ItemFormValues, photoFile?: File | null, receiptFile?: File | null) => {
     const isEdit = formMode.value === 'edit';
     pending.value = true;
     try {
@@ -115,6 +115,15 @@ export function useItems() {
         const formData = new FormData();
         formData.append('photo', photoFile);
         await $fetch(`/api/items/${savedItem.id}/upload-photo`, {
+          method: 'POST',
+          body: formData,
+        });
+      }
+
+      if (receiptFile && savedItem?.id) {
+        const formData = new FormData();
+        formData.append('receipt', receiptFile);
+        await $fetch(`/api/items/${savedItem.id}/upload-receipt`, {
           method: 'POST',
           body: formData,
         });

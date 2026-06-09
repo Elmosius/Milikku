@@ -13,7 +13,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { Home, MapPin, Package, Tags } from 'lucide-vue-next';
+import { HandCoins, Home, MapPin, Package, Tags } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import NavUser from './NavUser.vue';
 
@@ -23,6 +23,7 @@ const { setOpenMobile } = useSidebar();
 const navItems = [
   { title: 'Dashboard', url: '/', icon: Home },
   { title: 'Items', url: '/items', icon: Package },
+  { title: 'Lendings', url: '/lendings', icon: HandCoins },
   { title: 'Categories', url: '/categories', icon: Tags },
   { title: 'Locations', url: '/locations', icon: MapPin },
 ];

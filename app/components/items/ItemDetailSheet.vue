@@ -242,6 +242,19 @@ watch(
                 <div class="font-medium">{{ formatDate(item.warrantyExpiry) }}</div>
               </div>
             </div>
+
+            <div v-if="item.receiptUrl" class="mt-4 space-y-2">
+              <div class="text-muted-foreground text-sm font-medium">Receipt / Struk</div>
+              <div class="bg-muted/50 overflow-hidden rounded-md border">
+                <a :href="item.receiptUrl" target="_blank" rel="noopener noreferrer">
+                  <img
+                    :src="item.receiptUrl"
+                    alt="Receipt"
+                    class="w-full object-contain max-h-48 cursor-pointer hover:opacity-80 transition-opacity"
+                  />
+                </a>
+              </div>
+            </div>
           </div>
 
           <Separator />

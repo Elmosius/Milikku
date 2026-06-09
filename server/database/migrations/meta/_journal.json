@@ -15,6 +15,13 @@
       "when": 1780840204028,
       "tag": "0001_overrated_human_cannonball",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780997269573,
+      "tag": "0002_demonic_vindicator",
+      "breakpoints": true
     }
   ]
 }

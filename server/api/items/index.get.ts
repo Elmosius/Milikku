@@ -45,6 +45,10 @@ export default defineEventHandler(async (event) => {
     orderFn = asc(items.name);
   } else if (sortBy === 'name-desc') {
     orderFn = desc(items.name);
+  } else if (sortBy === 'price-asc') {
+    orderFn = asc(items.purchasePrice);
+  } else if (sortBy === 'price-desc') {
+    orderFn = desc(items.purchasePrice);
   }
 
   // Get total count matching current filters

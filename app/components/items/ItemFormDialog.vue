@@ -33,15 +33,20 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'update:open': [val: boolean];
-  submit: [values: ItemFormValues, photoFile: File | null];
+  submit: [values: ItemFormValues, photoFile: File | null, receiptFile: File | null];
 }>();
 
 const selectedPhotoFile = ref<File | null>(null);
 const previewUrl = ref<string | null>(null);
+const selectedReceiptFile = ref<File | null>(null);
+const receiptPreviewUrl = ref<string | null>(null);
 
 onUnmounted(() => {
   if (previewUrl.value && previewUrl.value.startsWith('blob:')) {
     URL.revokeObjectURL(previewUrl.value);
+  }
+  if (receiptPreviewUrl.value && receiptPreviewUrl.value.startsWith('blob:')) {
+    URL.revokeObjectURL(receiptPreviewUrl.value);
   }
 });
 
@@ -62,10 +67,15 @@ watch(
   ([isOpen]) => {
     if (isOpen) {
       selectedPhotoFile.value = null;
+      selectedReceiptFile.value = null;
       if (previewUrl.value && previewUrl.value.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl.value);
       }
+      if (receiptPreviewUrl.value && receiptPreviewUrl.value.startsWith('blob:')) {
+        URL.revokeObjectURL(receiptPreviewUrl.value);
+      }
       previewUrl.value = props.mode === 'edit' && props.item?.photoUrl ? props.item.photoUrl : null;
+      receiptPreviewUrl.value = props.mode === 'edit' && props.item?.receiptUrl ? props.item.receiptUrl : null;
 
       if (props.mode === 'edit' && props.item) {
         setValues({
@@ -114,7 +124,7 @@ watch(
 );
 
 const onSubmit = handleSubmit((values) => {
-  emit('submit', values as ItemFormValues, selectedPhotoFile.value);
+  emit('submit', values as ItemFormValues, selectedPhotoFile.value, selectedReceiptFile.value);
 });
 
 const priceFormatter = new Intl.NumberFormat('id-ID', {
@@ -169,6 +179,18 @@ const handleFileChange = (e: Event, handleChange: (val: any) => void) => {
       URL.revokeObjectURL(previewUrl.value);
     }
     previewUrl.value = URL.createObjectURL(file);
+  }
+};
+
+const handleReceiptFileChange = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    selectedReceiptFile.value = file;
+    if (receiptPreviewUrl.value && receiptPreviewUrl.value.startsWith('blob:')) {
+      URL.revokeObjectURL(receiptPreviewUrl.value);
+    }
+    receiptPreviewUrl.value = URL.createObjectURL(file);
   }
 };
 </script>
@@ -420,6 +442,27 @@ const handleFileChange = (e: Event, handleChange: (val: any) => void) => {
                   <FormMessage class="absolute bottom-0 left-0 text-xs" />
                 </FormItem>
               </FormField>
+            </div>
+
+            <div class="relative col-span-1 space-y-2 pb-4 md:col-span-2">
+              <Label>Receipt / Struk (Optional)</Label>
+              <div class="mt-2 flex items-center gap-4">
+                <div
+                  v-if="receiptPreviewUrl"
+                  class="border-border bg-muted h-16 w-16 shrink-0 overflow-hidden rounded-md border"
+                >
+                  <img
+                    :src="receiptPreviewUrl"
+                    alt="Receipt Preview"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  @change="handleReceiptFileChange"
+                />
+              </div>
             </div>
           </div>
 

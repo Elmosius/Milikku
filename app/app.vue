@@ -8,6 +8,7 @@ const { isLoading } = useAuth();
 
 <template>
   <div>
+    <VitePwaManifest />
     <div
       v-if="isLoading"
       class="bg-background relative flex min-h-svh flex-col items-center justify-center overflow-hidden p-4"

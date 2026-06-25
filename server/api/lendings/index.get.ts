@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
       .where(and(...filters))
       .orderBy(desc(lendings.createdAt));
 
-    return userLendings.map((l) => ({
+    return userLendings.map((l: (typeof userLendings)[number]) => ({
       ...l,
       item: {
         id: l.itemId,

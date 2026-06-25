@@ -37,8 +37,9 @@ export default defineEventHandler(async (event) => {
       // Extract path from URL: userId/filename
       const url = new URL(existingItem.photoUrl);
       const pathParts = url.pathname.split('/item-photos/');
-      if (pathParts.length > 1) {
-        await supabase.storage.from('item-photos').remove([pathParts[1]]);
+      const storagePath = pathParts[1];
+      if (storagePath) {
+        await supabase.storage.from('item-photos').remove([storagePath]);
       }
     } catch {
       // Non-critical — item is already deleted from DB

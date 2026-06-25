@@ -6,6 +6,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   type AnyPgColumn,
 } from 'drizzle-orm/pg-core';
@@ -243,3 +244,42 @@ export const lendingsRelations = relations(lendings, ({ one }) => ({
     references: [profiles.id],
   }),
 }));
+
+export const reminderStates = pgTable(
+  'reminder_states',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+    reminderKey: text('reminder_key').notNull(),
+    readAt: timestamp('read_at'),
+    dismissedAt: timestamp('dismissed_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('reminder_states_user_key_unique').on(table.userId, table.reminderKey),
+    pgPolicy('Users can view their own reminder states', {
+      for: 'select',
+      to: authenticatedRole,
+      using: authenticatedUserOwns(table.userId),
+    }),
+    pgPolicy('Users can create their own reminder states', {
+      for: 'insert',
+      to: authenticatedRole,
+      withCheck: authenticatedUserOwns(table.userId),
+    }),
+    pgPolicy('Users can update their own reminder states', {
+      for: 'update',
+      to: authenticatedRole,
+      using: authenticatedUserOwns(table.userId),
+      withCheck: authenticatedUserOwns(table.userId),
+    }),
+    pgPolicy('Users can delete their own reminder states', {
+      for: 'delete',
+      to: authenticatedRole,
+      using: authenticatedUserOwns(table.userId),
+    }),
+  ],
+).enableRLS();

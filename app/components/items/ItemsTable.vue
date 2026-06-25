@@ -31,6 +31,7 @@ const props = defineProps<{
   };
   getCategory: (id: string | null | undefined) => Category | undefined;
   getLocation: (id: string | null | undefined) => Location | undefined;
+  isFavoriteUpdating?: (itemId: string) => boolean;
 }>();
 
 const emit = defineEmits<{
@@ -105,6 +106,7 @@ const visiblePages = computed(() => {
               <div class="flex items-center gap-2">
                 <button
                   @click.stop="$emit('toggleFavorite', item)"
+                  :disabled="isFavoriteUpdating?.(item.id)"
                   class="text-muted-foreground transition-colors hover:text-yellow-500 focus:outline-none"
                   :class="{ 'text-yellow-500': item.isFavorite }"
                   title="Toggle Favorite"

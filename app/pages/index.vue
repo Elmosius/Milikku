@@ -13,6 +13,7 @@ import {
 import { Donut, StackedBar } from '@unovis/ts';
 import { VisAxis, VisDonut, VisSingleContainer, VisStackedBar, VisXYContainer, VisTooltip, VisCrosshair } from '@unovis/vue';
 import { DollarSign, MapPin, Package, Tag } from 'lucide-vue-next';
+import NeedsAttention from '~/components/reminders/NeedsAttention.vue';
 
 const { data: dashboard, pending } = useFetch('/api/dashboard');
 
@@ -134,6 +135,8 @@ const donutColors = ['#f15844', '#f97316', '#f59e0b', '#10b981', '#3b82f6', '#8b
         </CardContent>
       </Card>
     </div>
+
+    <NeedsAttention />
 
     <!-- Charts Section -->
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7" v-if="dashboard">

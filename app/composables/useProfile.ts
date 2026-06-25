@@ -21,14 +21,20 @@ export function useProfile() {
   const isUpdating = ref(false);
   const isUploading = ref(false);
 
+  const persistProfile = async (values: { fullName?: string; avatarUrl?: string }) => {
+    await $fetch<Profile>('/api/profile', {
+      method: 'PUT',
+      body: values,
+    });
+    await refresh();
+  };
+
   const updateProfile = async (values: { fullName?: string; avatarUrl?: string }) => {
+    if (isUpdating.value) return;
+
     isUpdating.value = true;
     try {
-      await $fetch<Profile>('/api/profile', {
-        method: 'PUT',
-        body: values,
-      });
-      await refresh();
+      await persistProfile(values);
       toast.success('Profile updated successfully');
     } catch (error: any) {
       toast.error(error.data?.statusMessage || error.message || 'Failed to update profile');
@@ -39,6 +45,8 @@ export function useProfile() {
   };
 
   const uploadAvatar = async (file: File) => {
+    if (isUploading.value) return;
+
     isUploading.value = true;
     try {
       const formData = new FormData();
@@ -49,7 +57,7 @@ export function useProfile() {
         body: formData,
       });
 
-      await updateProfile({ avatarUrl: response.avatarUrl });
+      await persistProfile({ avatarUrl: response.avatarUrl });
       toast.success('Avatar uploaded successfully');
       return response.avatarUrl;
     } catch (error: any) {

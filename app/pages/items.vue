@@ -16,6 +16,7 @@ const {
   formMode,
   selectedItemToEdit,
   initialCreateData,
+  isSaving,
   openCreateForm,
   openEditForm,
   handleSubmit,
@@ -30,9 +31,11 @@ const {
   confirmDelete,
   handleDelete,
   toggleFavorite,
+  isFavoriteUpdating,
   getCategory,
   getLocation,
 } = useItems();
+const route = useRoute();
 
 // Watch for Aimo global state — auto-open create form when Aimo parses data
 const aimoState = useAimoState();
@@ -50,6 +53,21 @@ const processAimoData = () => {
 
 onMounted(processAimoData);
 watch(aimoState, processAimoData);
+
+const openItemFromQuery = async () => {
+  const itemId = typeof route.query.item === 'string' ? route.query.item : null;
+  if (!itemId || selectedItemToView.value?.id === itemId) return;
+
+  try {
+    const item = await $fetch(`/api/items/${itemId}`);
+    openDetailSheet(item);
+  } catch {
+    // The reminder may have become stale because the item was removed.
+  }
+};
+
+onMounted(openItemFromQuery);
+watch(() => route.query.item, openItemFromQuery);
 </script>
 
 <template>
@@ -68,6 +86,7 @@ watch(aimoState, processAimoData);
       @edit="openEditForm"
       @delete="confirmDelete"
       @toggle-favorite="toggleFavorite"
+      :is-favorite-updating="isFavoriteUpdating"
       @change-page="queryParams.page = $event"
       @change-limit="queryParams.limit = $event"
     />
@@ -77,6 +96,7 @@ watch(aimoState, processAimoData);
       :mode="formMode"
       :item="selectedItemToEdit"
       :initial-data="initialCreateData"
+      :is-submitting="isSaving"
       @submit="handleSubmit"
     />
 

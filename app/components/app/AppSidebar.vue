@@ -13,7 +13,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { HandCoins, Home, MapPin, Package, Tags } from 'lucide-vue-next';
+import { Bell, HandCoins, Home, MapPin, Package, Tags } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import NavUser from './NavUser.vue';
 
@@ -26,6 +26,7 @@ const navItems = [
   { title: 'Lendings', url: '/lendings', icon: HandCoins },
   { title: 'Categories', url: '/categories', icon: Tags },
   { title: 'Locations', url: '/locations', icon: MapPin },
+  { title: 'Reminders', url: '/notifications', icon: Bell },
 ];
 </script>
 

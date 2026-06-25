@@ -6,10 +6,27 @@ import { Card, CardContent } from '~/components/ui/card';
 import { Separator } from '~/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import LendItemDialog from '~/components/lendings/LendItemDialog.vue';
-import DeleteItemDialog from '~/components/items/DeleteItemDialog.vue';
+import DeleteLendingDialog from '~/components/lendings/DeleteLendingDialog.vue';
 import { formatDate } from '~/utils/date';
 
-const { lendings, activeLendings, returnedLendings, pending, refresh, dialogOpen, selectedItemId, handleCreate, handleReturn, deleteAlertOpen, lendingToDelete, isDeleting, confirmDelete, handleDelete } = useLendings();
+const {
+  activeLendings,
+  returnedLendings,
+  pending,
+  dialogOpen,
+  selectedItemId,
+  isCreating,
+  handleCreate,
+  handleReturn,
+  isReturning,
+  deleteAlertOpen,
+  lendingToDelete,
+  isDeleting,
+  confirmDelete,
+  handleDelete,
+} = useLendings();
+const route = useRoute();
+const highlightedLendingId = ref<string | null>(null);
 
 const { data: allItems } = useFetch('/api/items', {
   query: { limit: 100 },
@@ -28,6 +45,20 @@ const isOverdue = (lending: any) => {
   if (!lending.expectedReturnAt || lending.returnedAt) return false;
   return new Date(lending.expectedReturnAt) < new Date();
 };
+
+const highlightLendingFromQuery = async () => {
+  const lendingId = typeof route.query.lending === 'string' ? route.query.lending : null;
+  if (!lendingId || !activeLendings.value.some((lending) => lending.id === lendingId)) return;
+
+  highlightedLendingId.value = lendingId;
+  await nextTick();
+  document.getElementById(`lending-${lendingId}`)?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  });
+};
+
+watch([() => route.query.lending, activeLendings], highlightLendingFromQuery, { immediate: true });
 </script>
 
 <template>
@@ -68,7 +99,16 @@ const isOverdue = (lending: any) => {
           <p class="text-muted-foreground text-sm">No items are currently lent out</p>
         </div>
         <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Card v-for="lending in activeLendings" :key="lending.id" class="relative overflow-hidden">
+          <Card
+            v-for="lending in activeLendings"
+            :id="`lending-${lending.id}`"
+            :key="lending.id"
+            class="relative overflow-hidden transition-shadow"
+            :class="{
+              'ring-primary ring-2 ring-offset-2 ring-offset-background':
+                highlightedLendingId === lending.id,
+            }"
+          >
             <div v-if="isOverdue(lending)" class="bg-destructive absolute top-0 right-0 left-0 h-1" />
             <CardContent class="p-4">
               <div class="mb-3 flex items-start justify-between">
@@ -105,11 +145,22 @@ const isOverdue = (lending: any) => {
               </div>
 
               <div class="mt-4 flex gap-2">
-                <Button size="sm" class="flex-1" @click="handleReturn(lending)">
+                <Button
+                  size="sm"
+                  class="flex-1"
+                  :disabled="isReturning(lending.id)"
+                  @click="handleReturn(lending)"
+                >
                   <Check class="mr-1.5 h-3.5 w-3.5" />
-                  Mark as Returned
+                  {{ isReturning(lending.id) ? 'Returning...' : 'Mark as Returned' }}
                 </Button>
-                <Button size="sm" variant="ghost" class="text-destructive" @click="confirmDelete(lending)">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  class="text-destructive"
+                  :disabled="isReturning(lending.id)"
+                  @click="confirmDelete(lending)"
+                >
                   <Trash2 class="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -165,12 +216,13 @@ const isOverdue = (lending: any) => {
       v-model:open="dialogOpen"
       :item-id="selectedItemId"
       :items="items"
+      :is-submitting="isCreating"
       @submit="handleCreate"
     />
 
-    <DeleteItemDialog
+    <DeleteLendingDialog
       :open="deleteAlertOpen"
-      :item="lendingToDelete"
+      :lending="lendingToDelete"
       :is-deleting="isDeleting"
       @update:open="deleteAlertOpen = $event"
       @confirm="handleDelete"

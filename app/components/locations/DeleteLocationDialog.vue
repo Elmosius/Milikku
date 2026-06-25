@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -9,22 +8,28 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
+import { Button } from '~/components/ui/button';
 import type { Location } from '~/types/location';
 
-defineProps<{
+const props = defineProps<{
   open: boolean;
   location: Location | null;
   isDeleting: boolean;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'update:open', value: boolean): void;
   (e: 'confirm'): void;
 }>();
+
+const handleOpenChange = (value: boolean) => {
+  if (props.isDeleting && !value) return;
+  emit('update:open', value);
+};
 </script>
 
 <template>
-  <AlertDialog :open="open" @update:open="$emit('update:open', $event)">
+  <AlertDialog :open="open" @update:open="handleOpenChange">
     <AlertDialogContent>
       <AlertDialogHeader>
         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -37,13 +42,13 @@ defineEmits<{
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel :disabled="isDeleting">Cancel</AlertDialogCancel>
-        <AlertDialogAction
-          class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        <Button
+          variant="destructive"
           :disabled="isDeleting"
-          @click="$emit('confirm')"
+          @click="emit('confirm')"
         >
           {{ isDeleting ? 'Deleting...' : 'Delete' }}
-        </AlertDialogAction>
+        </Button>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

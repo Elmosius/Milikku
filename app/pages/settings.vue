@@ -64,7 +64,13 @@ const handleFileChange = async (event: Event) => {
               <UserIcon class="h-10 w-10 text-primary" stroke-width="1.5" />
             </AvatarFallback>
           </Avatar>
-          <Button variant="outline" size="sm" class="w-full" :disabled="isUploading" @click="triggerFileUpload">
+          <Button
+            variant="outline"
+            size="sm"
+            class="w-full"
+            :disabled="isUploading || isUpdating"
+            @click="triggerFileUpload"
+          >
             <Upload class="mr-2 h-4 w-4" />
             {{ isUploading ? 'Uploading...' : 'Change Avatar' }}
           </Button>
@@ -86,11 +92,17 @@ const handleFileChange = async (event: Event) => {
 
           <div class="space-y-1.5">
             <Label for="fullName">Full Name</Label>
-            <Input id="fullName" type="text" v-model="fullName" placeholder="Enter your full name" :disabled="pending" />
+            <Input
+              id="fullName"
+              type="text"
+              v-model="fullName"
+              placeholder="Enter your full name"
+              :disabled="pending || isUpdating || isUploading"
+            />
           </div>
 
           <div class="flex justify-end pt-2">
-            <Button @click="handleSaveProfile" :disabled="isUpdating || pending">
+            <Button @click="handleSaveProfile" :disabled="isUpdating || isUploading || pending">
               {{ isUpdating ? 'Saving...' : 'Save Changes' }}
             </Button>
           </div>

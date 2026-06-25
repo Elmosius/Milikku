@@ -17,6 +17,8 @@ export function useLendings(itemId?: Ref<string | undefined>) {
 
   const dialogOpen = ref(false);
   const selectedItemId = ref<string | null>(null);
+  const isCreating = ref(false);
+  const returningIds = ref(new Set<string>());
 
   const deleteAlertOpen = ref(false);
   const lendingToDelete = ref<Lending | null>(null);
@@ -28,6 +30,9 @@ export function useLendings(itemId?: Ref<string | undefined>) {
   };
 
   const handleCreate = async (values: LendingFormValues) => {
+    if (isCreating.value) return;
+
+    isCreating.value = true;
     try {
       await $fetch('/api/lendings', {
         method: 'POST',
@@ -38,10 +43,15 @@ export function useLendings(itemId?: Ref<string | undefined>) {
       await refresh();
     } catch (error: any) {
       toast.error(error.data?.statusMessage || error.message || 'Failed to create lending');
+    } finally {
+      isCreating.value = false;
     }
   };
 
   const handleReturn = async (lending: Lending) => {
+    if (returningIds.value.has(lending.id)) return;
+
+    returningIds.value = new Set(returningIds.value).add(lending.id);
     try {
       const today = new Date().toISOString().split('T')[0];
       await $fetch(`/api/lendings/${lending.id}`, {
@@ -52,8 +62,14 @@ export function useLendings(itemId?: Ref<string | undefined>) {
       await refresh();
     } catch (error: any) {
       toast.error(error.data?.statusMessage || error.message || 'Failed to mark as returned');
+    } finally {
+      const nextIds = new Set(returningIds.value);
+      nextIds.delete(lending.id);
+      returningIds.value = nextIds;
     }
   };
+
+  const isReturning = (lendingId: string) => returningIds.value.has(lendingId);
 
   const confirmDelete = (lending: Lending) => {
     lendingToDelete.value = lending;
@@ -61,7 +77,7 @@ export function useLendings(itemId?: Ref<string | undefined>) {
   };
 
   const handleDelete = async () => {
-    if (!lendingToDelete.value) return;
+    if (!lendingToDelete.value || isDeleting.value) return;
 
     isDeleting.value = true;
     try {
@@ -94,9 +110,11 @@ export function useLendings(itemId?: Ref<string | undefined>) {
 
     dialogOpen,
     selectedItemId,
+    isCreating,
     openLendDialog,
     handleCreate,
     handleReturn,
+    isReturning,
 
     deleteAlertOpen,
     lendingToDelete,

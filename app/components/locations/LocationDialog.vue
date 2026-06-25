@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
-import { watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
 import { Button } from '~/components/ui/button';
 import {
@@ -31,6 +31,7 @@ const emit = defineEmits<{
 }>();
 
 const formSchema = toTypedSchema(locationSchema);
+const submissionLocked = ref(false);
 
 const { handleSubmit, setValues, resetForm, isSubmitting } = useForm({
   validationSchema: formSchema,
@@ -60,6 +61,9 @@ watch(
 );
 
 const onSubmit = handleSubmit(async (values: LocationSchema) => {
+  if (submissionLocked.value) return;
+
+  submissionLocked.value = true;
   try {
     const url =
       props.mode === 'edit' && props.location
@@ -86,12 +90,21 @@ const onSubmit = handleSubmit(async (values: LocationSchema) => {
     }, 150);
   } catch (error: any) {
     toast.error(error.message || 'An error occurred');
+  } finally {
+    submissionLocked.value = false;
   }
 });
+
+const isSaving = computed(() => submissionLocked.value || isSubmitting.value);
+
+const handleOpenChange = (value: boolean) => {
+  if (isSaving.value && !value) return;
+  emit('update:open', value);
+};
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="$emit('update:open', $event)">
+  <Dialog :open="open" @update:open="handleOpenChange">
     <DialogContent class="sm:max-w-106.25">
       <DialogHeader>
         <DialogTitle>{{ mode === 'edit' ? 'Edit Location' : 'Add Location' }}</DialogTitle>
@@ -158,13 +171,13 @@ const onSubmit = handleSubmit(async (values: LocationSchema) => {
           <Button
             type="button"
             variant="outline"
-            @click="$emit('update:open', false)"
-            :disabled="isSubmitting"
+            @click="handleOpenChange(false)"
+            :disabled="isSaving"
           >
             Cancel
           </Button>
-          <Button type="submit" :disabled="isSubmitting">
-            {{ isSubmitting ? 'Saving...' : mode === 'edit' ? 'Save Changes' : 'Create' }}
+          <Button type="submit" :disabled="isSaving">
+            {{ isSaving ? 'Saving...' : mode === 'edit' ? 'Save Changes' : 'Create' }}
           </Button>
         </DialogFooter>
       </form>

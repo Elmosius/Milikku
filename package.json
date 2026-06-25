@@ -1,6 +1,6 @@
 {
   "name": "Milikku",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "type": "module",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
     "dev": "TMPDIR=/tmp nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "test": "node --experimental-strip-types --test server/utils/reminders.test.mjs",
     "postinstall": "nuxt prepare",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",

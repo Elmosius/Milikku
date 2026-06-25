@@ -76,6 +76,7 @@ export function useItems() {
   const formMode = ref<'create' | 'edit'>('create');
   const selectedItemToEdit = ref<Item | null>(null);
   const initialCreateData = ref<Partial<ItemFormValues> | null>(null);
+  const isSaving = ref(false);
 
   const openCreateForm = (initialData?: Partial<ItemFormValues>) => {
     formMode.value = 'create';
@@ -92,8 +93,10 @@ export function useItems() {
   };
 
   const handleSubmit = async (values: ItemFormValues, photoFile?: File | null, receiptFile?: File | null) => {
+    if (isSaving.value) return;
+
     const isEdit = formMode.value === 'edit';
-    pending.value = true;
+    isSaving.value = true;
     try {
       let savedItem: Item;
 
@@ -134,7 +137,7 @@ export function useItems() {
     } catch (error: any) {
       toast.error(error.data?.statusMessage || error.message || 'An error occurred');
     } finally {
-      pending.value = false;
+      isSaving.value = false;
     }
   };
 
@@ -159,6 +162,7 @@ export function useItems() {
   const deleteAlertOpen = ref(false);
   const itemToDelete = ref<Item | null>(null);
   const isDeleting = ref(false);
+  const favoriteUpdatingIds = ref(new Set<string>());
 
   const confirmDelete = (item: Item) => {
     itemToDelete.value = item;
@@ -166,7 +170,7 @@ export function useItems() {
   };
 
   const handleDelete = async () => {
-    if (!itemToDelete.value) return;
+    if (!itemToDelete.value || isDeleting.value) return;
 
     isDeleting.value = true;
     try {
@@ -183,6 +187,9 @@ export function useItems() {
   };
 
   const toggleFavorite = async (item: Item) => {
+    if (favoriteUpdatingIds.value.has(item.id)) return;
+
+    favoriteUpdatingIds.value = new Set(favoriteUpdatingIds.value).add(item.id);
     const originalFavorite = item.isFavorite;
     item.isFavorite = !originalFavorite;
     
@@ -196,8 +203,14 @@ export function useItems() {
     } catch  {
       item.isFavorite = originalFavorite;
       toast.error('Failed to update favorite status');
+    } finally {
+      const nextIds = new Set(favoriteUpdatingIds.value);
+      nextIds.delete(item.id);
+      favoriteUpdatingIds.value = nextIds;
     }
   };
+
+  const isFavoriteUpdating = (itemId: string) => favoriteUpdatingIds.value.has(itemId);
 
   const { categories } = useCategories();
   const { locations } = useLocations();
@@ -223,6 +236,7 @@ export function useItems() {
     formMode,
     selectedItemToEdit,
     initialCreateData,
+    isSaving,
     openCreateForm,
     openEditForm,
     handleSubmit,
@@ -240,6 +254,7 @@ export function useItems() {
     handleDelete,
 
     toggleFavorite,
+    isFavoriteUpdating,
 
     getCategory,
     getLocation,

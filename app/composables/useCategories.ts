@@ -37,7 +37,7 @@ export function useCategories() {
   };
 
   const handleDelete = async () => {
-    if (!categoryToDelete.value) return;
+    if (!categoryToDelete.value || isDeleting.value) return;
 
     isDeleting.value = true;
     try {

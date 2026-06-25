@@ -23,6 +23,7 @@ const props = defineProps<{
   open: boolean;
   itemId?: string | null;
   items?: Item[];
+  isSubmitting?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -52,12 +53,18 @@ watch(
 );
 
 const onSubmit = handleSubmit((values) => {
+  if (props.isSubmitting) return;
   emit('submit', values as LendingFormValues);
 });
+
+const handleOpenChange = (value: boolean) => {
+  if (props.isSubmitting && !value) return;
+  emit('update:open', value);
+};
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="emit('update:open', $event)">
+  <Dialog :open="open" @update:open="handleOpenChange">
     <DialogContent class="sm:max-w-lg">
       <DialogHeader>
         <DialogTitle>Lend Item</DialogTitle>
@@ -138,8 +145,17 @@ const onSubmit = handleSubmit((values) => {
         </FormField>
 
         <div class="flex justify-end gap-4">
-          <Button type="button" variant="outline" @click="emit('update:open', false)">Cancel</Button>
-          <Button type="submit">Lend</Button>
+          <Button
+            type="button"
+            variant="outline"
+            :disabled="isSubmitting"
+            @click="handleOpenChange(false)"
+          >
+            Cancel
+          </Button>
+          <Button type="submit" :disabled="isSubmitting">
+            {{ isSubmitting ? 'Lending...' : 'Lend' }}
+          </Button>
         </div>
       </form>
     </DialogContent>

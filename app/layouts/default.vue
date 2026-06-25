@@ -3,6 +3,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { Separator } from '@/components/ui/separator';
 import AppSidebar from '@/components/app/AppSidebar.vue';
 import AIItemFAB from '@/components/items/AIItemFAB.vue';
+import ReminderBell from '@/components/reminders/ReminderBell.vue';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -68,13 +69,15 @@ const breadcrumbItems = computed(() => {
           </Breadcrumb>
         </div>
 
-        <!-- Quick access user avatar -->
-        <Avatar class="h-8 w-8 rounded-full border">
-          <AvatarImage :src="profile?.avatarUrl || ''" :alt="user?.email" />
-          <AvatarFallback class="bg-primary/10 text-primary rounded-full text-xs font-semibold">
-            {{ user?.email?.charAt(0).toUpperCase() || 'U' }}
-          </AvatarFallback>
-        </Avatar>
+        <div class="flex items-center gap-2">
+          <ReminderBell />
+          <Avatar class="h-8 w-8 rounded-full border">
+            <AvatarImage :src="profile?.avatarUrl || ''" :alt="user?.email" />
+            <AvatarFallback class="bg-primary/10 text-primary rounded-full text-xs font-semibold">
+              {{ user?.email?.charAt(0).toUpperCase() || 'U' }}
+            </AvatarFallback>
+          </Avatar>
+        </div>
       </header>
       <main class="flex flex-1 flex-col p-4 md:p-6">
         <slot />

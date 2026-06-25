@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertTriangle } from 'lucide-vue-next';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,17 +10,17 @@ import {
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
 import { Button } from '~/components/ui/button';
-import type { Category } from '~/types/category';
+import type { Lending } from '~/types/lending';
 
 const props = defineProps<{
   open: boolean;
-  category: Category | null;
+  lending: Lending | null;
   isDeleting: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:open', value: boolean): void;
-  (e: 'confirm'): void;
+  'update:open': [value: boolean];
+  confirm: [];
 }>();
 
 const handleOpenChange = (value: boolean) => {
@@ -32,22 +33,28 @@ const handleOpenChange = (value: boolean) => {
   <AlertDialog :open="open" @update:open="handleOpenChange">
     <AlertDialogContent>
       <AlertDialogHeader>
-        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+        <div class="flex items-center gap-3">
+          <div class="bg-destructive/10 text-destructive rounded-md p-2">
+            <AlertTriangle class="h-5 w-5" />
+          </div>
+          <AlertDialogTitle>Hapus riwayat peminjaman?</AlertDialogTitle>
+        </div>
         <AlertDialogDescription>
-          This action cannot be undone. This will permanently delete the category "<span
-            class="text-foreground font-medium"
-            >{{ category?.name }}</span
-          >".
+          Riwayat peminjaman
+          <span class="text-foreground font-medium">
+            {{ lending?.item?.name || 'barang ini' }}
+          </span>
+          akan dihapus permanen.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogCancel :disabled="isDeleting">Cancel</AlertDialogCancel>
+        <AlertDialogCancel :disabled="isDeleting">Batal</AlertDialogCancel>
         <Button
           variant="destructive"
           :disabled="isDeleting"
           @click="emit('confirm')"
         >
-          {{ isDeleting ? 'Deleting...' : 'Delete' }}
+          {{ isDeleting ? 'Menghapus...' : 'Hapus' }}
         </Button>
       </AlertDialogFooter>
     </AlertDialogContent>

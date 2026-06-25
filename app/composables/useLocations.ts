@@ -37,7 +37,7 @@ export function useLocations() {
   };
 
   const handleDelete = async () => {
-    if (!locationToDelete.value) return;
+    if (!locationToDelete.value || isDeleting.value) return;
     isDeleting.value = true;
     try {
       await $fetch(`/api/locations/${locationToDelete.value.id}`, {

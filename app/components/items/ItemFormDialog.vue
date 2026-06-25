@@ -29,6 +29,7 @@ const props = defineProps<{
   mode: 'create' | 'edit';
   item: Item | null;
   initialData?: Partial<ItemFormValues> | null;
+  isSubmitting?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -124,8 +125,14 @@ watch(
 );
 
 const onSubmit = handleSubmit((values) => {
+  if (props.isSubmitting) return;
   emit('submit', values as ItemFormValues, selectedPhotoFile.value, selectedReceiptFile.value);
 });
+
+const handleOpenChange = (value: boolean) => {
+  if (props.isSubmitting && !value) return;
+  emit('update:open', value);
+};
 
 const priceFormatter = new Intl.NumberFormat('id-ID', {
   minimumFractionDigits: 0,
@@ -196,7 +203,7 @@ const handleReceiptFileChange = (e: Event) => {
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="emit('update:open', $event)">
+  <Dialog :open="open" @update:open="handleOpenChange">
     <DialogContent class="p-0 sm:max-w-3xl">
       <DialogHeader class="border-b px-6 py-4">
         <DialogTitle>{{ mode === 'create' ? 'Add New Item' : 'Edit Item' }}</DialogTitle>
@@ -481,10 +488,16 @@ const handleReceiptFileChange = (e: Event) => {
           </FormField>
 
           <div class="flex justify-end gap-4 pb-4">
-            <Button type="button" variant="outline" @click="emit('update:open', false)"
+            <Button
+              type="button"
+              variant="outline"
+              :disabled="isSubmitting"
+              @click="handleOpenChange(false)"
               >Cancel</Button
             >
-            <Button type="submit">Save</Button>
+            <Button type="submit" :disabled="isSubmitting">
+              {{ isSubmitting ? 'Saving...' : mode === 'edit' ? 'Save Changes' : 'Create Item' }}
+            </Button>
           </div>
         </form>
       </ScrollArea>
